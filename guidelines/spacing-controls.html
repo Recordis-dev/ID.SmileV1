@@ -1,0 +1,20 @@
+<!-- @dsCard group="Spacing" viewport="700x150" name="Control heights" subtitle="32 / 44 / 54px" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { padding: 22px; background: var(--surface-page); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
+  .sw { width: 92px; }
+  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
+
+</style></head>
+<body>
+<div class="row" style="gap:18px">
+    <div style="height:32px;padding:0 14px;border-radius:var(--radius-pill);background:var(--mist);display:flex;align-items:center;font:var(--weight-medium) 13px var(--font-sans)">32 sm</div>
+    <div style="height:44px;padding:0 22px;border-radius:var(--radius-pill);background:var(--accent);color:#fff;display:flex;align-items:center;font:var(--weight-medium) 15px var(--font-sans)">44 md</div>
+    <div style="height:54px;padding:0 30px;border-radius:var(--radius-pill);background:var(--ink-900);color:#fff;display:flex;align-items:center;font:var(--weight-medium) 17px var(--font-sans)">54 lg</div>
+  </div>
+</body></html>

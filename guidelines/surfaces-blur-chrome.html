@@ -1,0 +1,21 @@
+<!-- @dsCard group="Surfaces" viewport="700x170" name="Translucent chrome" subtitle="72% scrim + saturate(180%) blur(20px)" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { padding: 22px; background: var(--surface-page); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
+  .sw { width: 92px; }
+  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
+
+</style></head>
+<body>
+<div style="position:relative;height:126px;border-radius:var(--radius-md);overflow:hidden;background:linear-gradient(120deg,var(--ink-900),var(--slate) 55%,var(--ink-700))">
+    <div style="position:absolute;inset:0 0 auto 0;height:48px;background:var(--scrim-chrome-inverse);backdrop-filter:var(--blur-chrome);-webkit-backdrop-filter:var(--blur-chrome);border-bottom:1px solid var(--border-inverse);display:flex;align-items:center;gap:24px;padding:0 22px;color:#fff;font:var(--weight-regular) 13px var(--font-sans)">
+      <span style="font-weight:600">Aperture</span><span style="opacity:.72">Halo</span><span style="opacity:.72">Studio</span><span style="opacity:.72">Support</span>
+    </div>
+    <div style="position:absolute;bottom:14px;left:22px" class="lbl">chrome floats over the stage, never opaque</div>
+  </div>
+</body></html>

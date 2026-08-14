@@ -1,0 +1,43 @@
+<!-- @dsCard group="Surfaces" viewport="700x190" name="Motion" subtitle="Long decelerating ease-out; no bounce, ever" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { padding: 22px; background: var(--surface-page); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
+  .sw { width: 92px; }
+  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
+  @keyframes sl { from { transform: translateX(0) } to { transform: translateX(190%) } }
+</style></head>
+<body>
+<div class="col" style="gap:10px">
+
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
+          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-fast) var(--ease-out) infinite alternate"></div>
+        </div>
+        <span class="lbl" style="width:110px">fast 200ms</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
+          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-base) var(--ease-out) infinite alternate"></div>
+        </div>
+        <span class="lbl" style="width:110px">base 320ms</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
+          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-slow) var(--ease-out) infinite alternate"></div>
+        </div>
+        <span class="lbl" style="width:110px">slow 560ms</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
+          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-cinema) var(--ease-out) infinite alternate"></div>
+        </div>
+        <span class="lbl" style="width:110px">cinema 900ms</span>
+      </div>
+    <span class="lbl">cubic-bezier(0.28, 0.11, 0.32, 1)</span>
+  </div>
+</body></html>

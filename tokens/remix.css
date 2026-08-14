@@ -1,0 +1,31 @@
+/* ID Smile × Aperture — brand-corrected remix layer.
+   Palette taken from the real ID Smile logo and social set: cyan-to-blue gradient
+   mark, white grounds, dark navy for contrast. Structure stays Aperture:
+   hairlines, spacing rhythm, Inter body/UI, IBM Plex Mono specs.
+   Load AFTER tokens/colors.css. */
+
+:root {
+  --accent:       #00A8E8;  /* logo cyan — accents, rings, dots, graphics */
+  --accent-hover: #29C0F5;
+  --accent-press: #0B6FB8;  /* deep blue — solid CTA fills, links, kickers (AA on white) */
+  --accent-soft:  #E4F3FC;
+  --accent-deep:  #08161F;  /* brand navy stage */
+
+  --surface-page:    #F6F9FB;
+  --surface-raised:  #EDF3F8;
+  --surface-sunken:  #E2EAF1;
+  --hairline:        #D7E1EA;
+
+  --text-primary:   #101820;
+  --text-secondary: #5C6A78;
+  --text-tertiary-on-dark: #8AA3B6;
+
+  --font-display: 'Bricolage Grotesque', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --weight-display: 700;
+
+  --text-link: var(--accent-press);
+}
+
+[data-theme="dark"] { --text-link: var(--accent-hover); }
+
+/* Rule: cyan never carries white text (2.5:1). Solid buttons use --accent-press. */

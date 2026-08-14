@@ -1,0 +1,20 @@
+<!-- @dsCard group="Type" viewport="700x200" name="Lead & body" subtitle="21px lead, 17px body, 15px small" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { padding: 22px; background: var(--surface-page); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
+  .sw { width: 92px; }
+  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
+
+</style></head>
+<body>
+<div class="col" style="gap:8px;max-width:600px">
+    <p style="font:var(--text-lead);letter-spacing:var(--tracking-normal)">A 21px lead sits directly under a headline and rarely runs past two lines.</p>
+    <p style="font:var(--text-copy);color:var(--text-secondary)">Body copy is 17px with 1.52 leading and secondary ink. Measure caps at roughly 66 characters — the container-narrow token exists for exactly this.</p>
+    <p style="font:var(--text-legal);color:var(--text-tertiary)">13px legal, tertiary ink, for footnotes and pricing terms.</p>
+  </div>
+</body></html>

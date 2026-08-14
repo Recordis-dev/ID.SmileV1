@@ -1,0 +1,22 @@
+<!-- @dsCard group="Colors" viewport="700x170" name="Accent" subtitle="One blue: links, the single CTA, focus rings" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { padding: 22px; background: var(--surface-page); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
+  .sw { width: 92px; }
+  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
+
+</style></head>
+<body>
+<div class="row">
+    <div class="sw col" style="gap:6px"><div class="chip" style="background:#0A66FF"></div><div class="lbl">accent</div><div class="lbl" style="color:var(--text-secondary)">#0A66FF</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#2A7BFF"></div><div class="lbl">accent-hover</div><div class="lbl" style="color:var(--text-secondary)">#2A7BFF</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#0752CC"></div><div class="lbl">accent-press</div><div class="lbl" style="color:var(--text-secondary)">#0752CC</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#EAF1FF"></div><div class="lbl">accent-soft</div><div class="lbl" style="color:var(--text-secondary)">#EAF1FF</div></div>
+    <div class="col" style="gap:6px;margin-left:12px">
+      <a href="#" style="font:var(--text-copy)">Learn more about Halo</a>
+      <span class="lbl">links inherit --text-link</span>
+    </div>
+  </div>
+</body></html>
