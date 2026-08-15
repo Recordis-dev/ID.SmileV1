@@ -17,6 +17,87 @@
   *{box-sizing:border-box}
   a{color:#0A6FB2;text-decoration:none}
   a:hover{color:#00BEEA}
+
+  .ids-marquee-link {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.28,0.11,0.32,1);
+    display: inline-block;
+  }
+  .ids-marquee-link:hover {
+    color: #fff !important;
+    transform: scale(1.25) !important;
+    text-shadow: 0 0 20px rgba(255,255,255,0.8) !important;
+    z-index: 10;
+    position: relative;
+  }
+
+  /* Mega Menu Styles */
+  .mega-menu-trigger {
+    position: relative;
+    cursor: pointer;
+    padding: 24px 0; /* Creates a large hover bridge */
+    margin: -24px 0;
+  }
+  .mega-menu-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 24px); /* Drop just below header */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #061520;
+    border: 1px solid rgba(150,200,235,.20);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    padding: 24px;
+    min-width: 600px; /* Wide panel */
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .mega-menu-trigger:hover .mega-menu-panel {
+    display: flex; /* Grid/flex layout */
+    gap: 32px;
+  }
+  .mega-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .mega-category {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #6FE0F8;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(150,200,235,.1);
+  }
+  .mega-link {
+    color: #AAC2D4;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mega-link:hover {
+    background: rgba(150,200,235,.1);
+    color: #fff;
+  }
+  .mega-link-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+  .mega-link:hover .mega-link-icon {
+    opacity: 1;
+    color: #00BEEA;
+  }
 </style>
 </helmet>
 
@@ -79,77 +160,52 @@ class Component extends DCLogic {
 </script>
 
 <script>
-  // Advanced Interactive Marquee Speed Control (Dual Layer: Web Animations API + Manual Translate Fallback)
+  // Robust Pure JS Marquee Controller
   document.addEventListener("DOMContentLoaded", function() {
     const container = document.getElementById("ids-marquee-container");
     const content = document.getElementById("ids-marquee-content");
     if (!container || !content) return;
 
-    let animation = null;
-    let useFallback = false;
-    let currentX = 0; // For fallback translate tracking
+    // Force override CSS animation so JS has total control
+    content.style.animation = 'none';
+    content.style.willChange = 'transform';
 
-    // Attempt Layer 1: Web Animations API
-    setTimeout(() => {
-      const anims = content.getAnimations();
-      if(anims.length > 0 && typeof anims[0].playbackRate !== 'undefined') {
-        animation = anims[0];
-      } else {
-        // Trigger Layer 2: JS Relay
-        useFallback = true;
-        // Kill the CSS animation so JS can take over seamlessly
-        content.style.animation = 'none';
-      }
-    }, 100);
-
-    const BASE_SPEED = 0.15; // Lento como antes
+    // Set base config
+    const BASE_SPEED = 0.5; // Slow crawl (pixels per frame)
     let targetSpeed = BASE_SPEED;
     let currentSpeed = BASE_SPEED;
+    let currentX = 0;
     let isHovering = false;
-    let lastTime = performance.now();
+
+    // Get the exact width of the scrolling block to loop perfectly
+    // The content is already duplicated twice by the previous script (marquee_line1 and marquee_line2)
+    // We just need to scroll it and reset when it hits half its total width
 
     function lerp(start, end, amt) {
       return (1 - amt) * start + amt * end;
     }
 
-    function animate(time) {
-      const dt = time - lastTime;
-      lastTime = time;
+    function animate() {
+      currentSpeed = lerp(currentSpeed, targetSpeed, 0.08);
 
-      if (Math.abs(currentSpeed - targetSpeed) > 0.005) {
-        currentSpeed = lerp(currentSpeed, targetSpeed, 0.1);
+      // Stop completely if close to zero
+      if (currentSpeed < 0.01) currentSpeed = 0;
+
+      currentX -= currentSpeed;
+
+      const scrollMax = content.scrollWidth / 2;
+      if (currentX <= -scrollMax && scrollMax > 0) {
+        currentX += scrollMax;
       }
 
-      // Stop absolute zero crawl
-      const effectiveSpeed = currentSpeed < 0.01 ? 0 : currentSpeed;
-
-      if (useFallback) {
-        // Layer 2: JS Manual Translation (Relay Mode)
-        // A base speed of 1 is roughly 100 pixels per second.
-        // We move leftward, and reset when reaching half width (since content is duplicated).
-        const pixelsPerMs = (effectiveSpeed * 100) / 1000;
-        currentX -= pixelsPerMs * dt;
-
-        // Loop back when half the element has scrolled out.
-        // This requires measuring the scrollWidth of the content block.
-        const halfWidth = content.scrollWidth / 2;
-        if (currentX <= -halfWidth && halfWidth > 0) {
-          currentX += halfWidth;
-        }
-        content.style.transform = `translateX(${currentX}px)`;
-      } else if (animation) {
-        // Layer 1: Web Animations API Mode
-        if (effectiveSpeed === 0) {
-           animation.pause();
-        } else {
-           if (animation.playState !== 'running') animation.play();
-           animation.playbackRate = effectiveSpeed;
-        }
-      }
-
+      content.style.transform = `translate3d(${currentX}px, 0, 0)`;
       requestAnimationFrame(animate);
     }
-    requestAnimationFrame(animate);
+
+    // Delay start slightly to allow font loading/layout to settle
+    setTimeout(() => {
+        requestAnimationFrame(animate);
+    }, 100);
 
     container.addEventListener("mouseenter", () => { isHovering = true; });
     container.addEventListener("mouseleave", () => {
@@ -163,15 +219,15 @@ class Component extends DCLogic {
       const rect = container.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
 
-      // Calculate distance from center (0 to 1)
+      // Distance from center: 0 (center) to 1 (edge)
       const distFromCenter = Math.abs(e.clientX - centerX) / (rect.width / 2);
 
-      if (distFromCenter < 0.08) {
-        // En el centro exacto: detener por completo
+      if (distFromCenter < 0.1) {
+        // Dead center: halt completely
         targetSpeed = 0;
       } else {
-        // Aceleración exponencial hacia los bordes
-        targetSpeed = BASE_SPEED + Math.pow(distFromCenter, 1.5) * 2.5;
+        // Accelerate exponentially towards edges
+        targetSpeed = BASE_SPEED + Math.pow(distFromCenter, 1.5) * 4.0;
       }
     });
   });
