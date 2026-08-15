@@ -4,17 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var userLang = navigator.language || navigator.userLanguage;
-    if (userLang.startsWith("en")) {
-      document.documentElement.setAttribute("lang", "en");
-      console.log("Language switched to English based on User Agent.");
-    } else {
-      document.documentElement.setAttribute("lang", "es");
-    }
-  });
-</script>
 </head>
 <body>
 <x-dc>
@@ -25,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_MX">
 <meta property="og:title" content="ID Smile — Ortodoncia especializada en Cuernavaca">
-<meta property="og:description" content="Especialistas para cada caso y subárea de enfoque, décadas de experiencia en conjunto, dentro del Hospital San Diego. Valoración con diagnóstico honesto y plan de tratamiento por escrito.">
+<meta property="og:description" content="Dos ortodoncistas con cédula verificable, dentro del Hospital San Diego. Valoración con diagnóstico honesto y plan de tratamiento por escrito.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,13 +72,13 @@
 
 <section id="top" style="background:#08161F;color:#fff;padding:clamp(48px,7vw,84px) 24px clamp(56px,8vw,92px);position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(110% 80% at 78% 0%,rgba(0,168,232,.22),transparent 62%);pointer-events:none"></div>
-  <div style="position:relative;max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 320px),1fr));gap:clamp(32px,5vw,56px);align-items:center">
+  <div style="position:relative;max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,56px);align-items:center">
     <div>
       <p data-reveal="1" style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5FD0FF;margin:0 0 18px;display:flex;align-items:center;gap:10px">
         <span style="width:26px;height:1px;background:#0B6FB8;display:block"></span>Ortodoncia · Hospital San Diego, Cuernavaca
       </p>
       <h1 data-reveal="1" style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-weight:700;font-size:clamp(34px,5.2vw,58px);line-height:1.03;letter-spacing:-.03em;margin:0 0 20px;text-wrap:balance">Tu tratamiento lo lleva<br>un ortodoncista, <em style="font-style:normal;color:#00A8E8">no un algoritmo</em>.</h1>
-      <p data-reveal="1" style="color:#AAC2D4;font-size:17.5px;line-height:1.6;max-width:48ch;margin:0 0 28px;text-wrap:pretty">Especialistas para cada caso y subárea de enfoque, décadas de experiencia en conjunto, dentro del Hospital San Diego. Cada ajuste lo hace la persona que diagnosticó tu caso — y el plan completo te lo damos por escrito antes de empezar.</p>
+      <p data-reveal="1" style="color:#AAC2D4;font-size:17.5px;line-height:1.6;max-width:48ch;margin:0 0 28px;text-wrap:pretty">Dos especialistas con cédula verificable, dentro del Hospital San Diego. Cada ajuste lo hace la persona que diagnosticó tu caso — y el plan completo te lo damos por escrito antes de empezar.</p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:32px">
         <a href="{{ waUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:9px;background:#0B6FB8;color:#fff;font-weight:700;font-size:15.5px;padding:15px 26px;border-radius:99px;box-shadow:0 8px 24px rgba(46,154,160,.28);transition:transform .2s,box-shadow .2s,background .2s" style-hover="background:#00A8E8;color:#fff;transform:translateY(-2px);box-shadow:0 14px 32px rgba(11,111,184,.34)">
           <svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.14c-.24.68-1.42 1.31-1.96 1.36-.5.05-.98.24-3.3-.69-2.77-1.09-4.53-3.92-4.67-4.1-.14-.18-1.12-1.49-1.12-2.84 0-1.35.71-2.02.96-2.29a1 1 0 0 1 .73-.34h.52c.17 0 .4-.06.62.47.24.58.81 2 .88 2.14.07.14.12.31.02.5-.44.87-.91.83-.67 1.24.9 1.54 1.79 2.08 3.15 2.76.23.12.37.1.5-.06.14-.16.58-.68.73-.91.15-.23.3-.19.51-.12.21.08 1.33.63 1.56.74.23.12.38.17.44.27.06.1.06.58-.18 1.26z"/></svg>
@@ -278,7 +267,7 @@
 </section>
 
 <section id="ninos" style="background:#08161F;color:#fff;padding:clamp(56px,8vw,96px) 24px">
-  <div style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 300px),1fr));gap:clamp(32px,5vw,56px);align-items:start">
+  <div style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(32px,5vw,56px);align-items:start">
     <div data-reveal="1">
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5FD0FF;margin:0 0 14px">Ortodoncia infantil</p>
       <h2 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:clamp(28px,3.8vw,38px);font-weight:700;letter-spacing:-.025em;margin:0 0 14px;line-height:1.12">¿Ya es momento de llevar a tu hijo al ortodoncista?</h2>
@@ -310,7 +299,7 @@
       <h2 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:clamp(28px,3.8vw,38px);font-weight:700;letter-spacing:-.025em;margin:0 0 12px;line-height:1.12">Un titular, un consultorio, cero intermediarios</h2>
       <p style="color:#5C6A78;font-size:16px;margin:0;text-wrap:pretty">La persona que diagnostica es la que te trata durante todo el tratamiento.</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 300px),1fr));gap:20px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
 
       <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:30px;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
         <div style="width:66px;height:66px;border-radius:50%;background:#08161F;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Bricolage Grotesque','Inter',sans-serif;font-weight:700;font-size:23px;margin-bottom:20px;border:2px solid #00A8E8">BA</div>
@@ -328,7 +317,7 @@
 
 <section style="background:#08161F;color:#fff;padding:clamp(56px,8vw,96px) 24px;position:relative;overflow:hidden">
   <div style="position:absolute;inset:0;background:radial-gradient(90% 70% at 15% 100%,rgba(210,80,107,.14),transparent 60%);pointer-events:none"></div>
-  <div style="position:relative;max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 320px),1fr));gap:clamp(32px,5vw,56px);align-items:center">
+  <div style="position:relative;max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,56px);align-items:center">
     <div data-reveal="1">
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5FD0FF;margin:0 0 14px">Confianza</p>
       <h2 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:clamp(26px,3.4vw,34px);font-weight:700;letter-spacing:-.025em;margin:0 0 16px;line-height:1.14">Credenciales verificables, no promesas de marketing</h2>
@@ -433,7 +422,7 @@
 </section>
 
 <section id="contacto" style="background:#08161F;color:#fff;padding:clamp(56px,8vw,96px) 24px">
-  <div style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%, 320px),1fr));gap:clamp(32px,5vw,56px);align-items:start">
+  <div style="max-width:1140px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,56px);align-items:start">
     <div>
       <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5FD0FF;margin:0 0 14px">Contacto</p>
       <h2 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:clamp(28px,3.8vw,38px);font-weight:700;letter-spacing:-.025em;margin:0 0 14px;line-height:1.12">Agenda tu valoración esta semana</h2>
@@ -469,6 +458,69 @@
         <span style="font-size:14px;color:#AAC2D4;line-height:1.5">Av. San Diego 1203, Torre Médica San Diego, Col. Delicias, Cuernavaca, Morelos. Estacionamiento en el hospital y acceso para silla de ruedas.</span>
         <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#00A8E8;margin-top:6px">Abrir en Google Maps →</span>
       </a>
+    </div>
+  </div>
+</section>
+
+
+<section id="blog" style="padding:clamp(56px,8vw,96px) 24px;background:#F5F9FC">
+  <div style="max-width:1140px;margin:0 auto">
+    <div data-reveal="1" style="max-width:62ch;margin:0 0 44px">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#0A6FB2;margin:0 0 14px">Conocimiento</p>
+      <h2 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:clamp(28px,3.8vw,38px);font-weight:700;letter-spacing:-.025em;margin:0 0 12px;line-height:1.12">Blog y recursos de salud</h2>
+      <p style="color:#5C6A78;font-size:16px;margin:0;text-wrap:pretty">Aprende más sobre cómo cuidar tu sonrisa con los expertos.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px">
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Ortodoncia</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">Mitos y realidades de los alineadores transparentes</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">¿Realmente funcionan igual que los brackets? Te contamos la verdad sobre la ortodoncia invisible.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Endodoncia</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">¿Cuándo es necesaria una endodoncia?</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">Descubre los síntomas principales que indican que el nervio de tu diente necesita tratamiento.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Odontopediatría</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">La primera visita al dentista: Guía para padres</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">Todo lo que necesitas saber para que la primera experiencia de tu hijo sea positiva.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Cirugía Bucal</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">Cuidados post-extracción de muelas del juicio</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">Alimentos permitidos, higiene y recomendaciones para una recuperación sin dolor.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Periodoncia</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">Sangrado de encías: ¿Por qué ocurre?</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">El sangrado al cepillarse no es normal. Conoce las causas de la gingivitis y cómo revertirla.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Implantes / Prótesis</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">Ventajas de los implantes dentales vs puentes</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">La pérdida de un diente afecta tu digestión y autoestima. Comparamos las mejores opciones de reemplazo.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
+      <article data-reveal="1" style="background:#fff;border:1px solid #D7E1EA;border-radius:10px;padding:24px;display:flex;flex-direction:column;transition:box-shadow .25s" style-hover="box-shadow:0 16px 40px rgba(12,36,43,.09)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#0A6FB2;margin-bottom:12px;display:block">Odontología Integral</span>
+        <h3 style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:18px;font-weight:700;margin:0 0 10px;letter-spacing:-.015em">Rutina de limpieza perfecta</h3>
+        <p style="font-size:14px;color:#5C6A78;margin:0 0 20px;line-height:1.6">¿Hilo dental antes o después del cepillado? Resuelve las dudas más comunes sobre higiene diaria.</p>
+        <a href="#" style="font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#0A6FB2;margin-top:auto;display:flex;align-items:center;gap:6px;text-decoration:none">Leer artículo <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+      </article>
+
     </div>
   </div>
 </section>
@@ -646,5 +698,63 @@ class Component extends DCLogic {
   }
 }
 </script>
+
+<script>
+  // Interactive Marquee Speed
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById("ids-marquee-container");
+    const content = document.getElementById("ids-marquee-content");
+    if (!container || !content) return;
+
+    let targetSpeed = 1; // Default animation speed multiplier
+    let currentSpeed = 1;
+    let isHovering = false;
+
+    // Linear interpolation for smooth speed transition
+    function lerp(start, end, amt) {
+      return (1 - amt) * start + amt * end;
+    }
+
+    function animate() {
+      if (Math.abs(currentSpeed - targetSpeed) > 0.01) {
+        currentSpeed = lerp(currentSpeed, targetSpeed, 0.1);
+        content.style.animationPlayState = currentSpeed < 0.02 ? 'paused' : 'running';
+        if (currentSpeed >= 0.02) {
+          // Adjust the duration based on playbackRate concept by changing actual animation duration
+          // Base duration is 45s.
+          const newDuration = 45 / currentSpeed;
+          content.style.animationDuration = `${newDuration}s`;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    container.addEventListener("mouseenter", () => { isHovering = true; });
+    container.addEventListener("mouseleave", () => {
+      isHovering = false;
+      targetSpeed = 1; // Return to normal speed
+    });
+
+    container.addEventListener("mousemove", (e) => {
+      if (!isHovering) return;
+
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+
+      // Calculate distance from center (0 to 1)
+      const distFromCenter = Math.abs(e.clientX - centerX) / (rect.width / 2);
+
+      // Closer to center = slower (distFromCenter approaches 0)
+      // Further from center = faster (distFromCenter approaches 1)
+
+      // We want it to completely stop at the exact center.
+      // So if distFromCenter is very small, speed becomes 0.
+
+      targetSpeed = Math.pow(distFromCenter, 1.5) * 2; // Curve the speed so it drops quickly near center
+    });
+  });
+</script>
 </body>
+
 </html>

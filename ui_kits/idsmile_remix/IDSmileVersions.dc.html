@@ -4,17 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var userLang = navigator.language || navigator.userLanguage;
-    if (userLang.startsWith("en")) {
-      document.documentElement.setAttribute("lang", "en");
-      console.log("Language switched to English based on User Agent.");
-    } else {
-      document.documentElement.setAttribute("lang", "es");
-    }
-  });
-</script>
 </head>
 <body>
 <x-dc>
@@ -88,5 +77,63 @@ class Component extends DCLogic {
 }
 
 </script>
+
+<script>
+  // Interactive Marquee Speed
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById("ids-marquee-container");
+    const content = document.getElementById("ids-marquee-content");
+    if (!container || !content) return;
+
+    let targetSpeed = 1; // Default animation speed multiplier
+    let currentSpeed = 1;
+    let isHovering = false;
+
+    // Linear interpolation for smooth speed transition
+    function lerp(start, end, amt) {
+      return (1 - amt) * start + amt * end;
+    }
+
+    function animate() {
+      if (Math.abs(currentSpeed - targetSpeed) > 0.01) {
+        currentSpeed = lerp(currentSpeed, targetSpeed, 0.1);
+        content.style.animationPlayState = currentSpeed < 0.02 ? 'paused' : 'running';
+        if (currentSpeed >= 0.02) {
+          // Adjust the duration based on playbackRate concept by changing actual animation duration
+          // Base duration is 45s.
+          const newDuration = 45 / currentSpeed;
+          content.style.animationDuration = `${newDuration}s`;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    container.addEventListener("mouseenter", () => { isHovering = true; });
+    container.addEventListener("mouseleave", () => {
+      isHovering = false;
+      targetSpeed = 1; // Return to normal speed
+    });
+
+    container.addEventListener("mousemove", (e) => {
+      if (!isHovering) return;
+
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+
+      // Calculate distance from center (0 to 1)
+      const distFromCenter = Math.abs(e.clientX - centerX) / (rect.width / 2);
+
+      // Closer to center = slower (distFromCenter approaches 0)
+      // Further from center = faster (distFromCenter approaches 1)
+
+      // We want it to completely stop at the exact center.
+      // So if distFromCenter is very small, speed becomes 0.
+
+      targetSpeed = Math.pow(distFromCenter, 1.5) * 2; // Curve the speed so it drops quickly near center
+    });
+  });
+</script>
 </body>
+
 </html>
