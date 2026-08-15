@@ -10,10 +10,17 @@ on:
       - 'ui_kits/**'
   schedule:
     - cron: '0 0 * * *' # Run daily to fetch remote changes
+  workflow_run:
+    workflows: ["Deploy static content to Pages"]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
   sync:
+    # Run sync if it was triggered manually, via cron, direct push to tracked paths,
+    # OR if it was triggered by a successful deployment run.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
