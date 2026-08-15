@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var userLang = navigator.language || navigator.userLanguage;
+    if (userLang.startsWith("en")) {
+      document.documentElement.setAttribute("lang", "en");
+      console.log("Language switched to English based on User Agent.");
+    } else {
+      document.documentElement.setAttribute("lang", "es");
+    }
+  });
+</script>
 </head>
 <body>
 <x-dc>
