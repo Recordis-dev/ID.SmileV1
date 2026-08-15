@@ -1,0 +1,14 @@
+{
+  "name": "id.smile-system",
+  "version": "1.0.0",
+  "description": "Aperture / ID Smile Design System",
+  "main": "sync.js",
+  "scripts": {
+    "sync": "node sync.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "node-fetch": "^2.6.1",
+    "yaml": "^2.3.4"
+  }
+}
