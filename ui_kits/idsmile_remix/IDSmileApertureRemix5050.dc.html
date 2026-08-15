@@ -697,30 +697,44 @@ class Component extends DCLogic {
 </script>
 
 <script>
-  // Interactive Marquee Speed
+  // Advanced Interactive Marquee Speed Control
   document.addEventListener("DOMContentLoaded", function() {
     const container = document.getElementById("ids-marquee-container");
     const content = document.getElementById("ids-marquee-content");
     if (!container || !content) return;
 
-    let targetSpeed = 1; // Default animation speed multiplier
-    let currentSpeed = 1;
+    // Use Web Animations API if available for precise playback rate manipulation
+    // The CSS animation is defined as 'idsTicker'.
+    let animation = null;
+
+    // We wait a tiny bit to ensure the CSS animation has instantiated on the element
+    setTimeout(() => {
+      const anims = content.getAnimations();
+      if(anims.length > 0) {
+        animation = anims[0];
+      }
+    }, 100);
+
+    const BASE_SPEED = 0.3; // Lento como antes
+    let targetSpeed = BASE_SPEED;
+    let currentSpeed = BASE_SPEED;
     let isHovering = false;
 
-    // Linear interpolation for smooth speed transition
     function lerp(start, end, amt) {
       return (1 - amt) * start + amt * end;
     }
 
     function animate() {
-      if (Math.abs(currentSpeed - targetSpeed) > 0.01) {
+      if (Math.abs(currentSpeed - targetSpeed) > 0.005) {
         currentSpeed = lerp(currentSpeed, targetSpeed, 0.1);
-        content.style.animationPlayState = currentSpeed < 0.02 ? 'paused' : 'running';
-        if (currentSpeed >= 0.02) {
-          // Adjust the duration based on playbackRate concept by changing actual animation duration
-          // Base duration is 45s.
-          const newDuration = 45 / currentSpeed;
-          content.style.animationDuration = `${newDuration}s`;
+
+        if (animation) {
+          if (currentSpeed < 0.02) {
+             animation.pause();
+          } else {
+             if(animation.playState !== 'running') animation.play();
+             animation.playbackRate = currentSpeed;
+          }
         }
       }
       requestAnimationFrame(animate);
@@ -730,11 +744,11 @@ class Component extends DCLogic {
     container.addEventListener("mouseenter", () => { isHovering = true; });
     container.addEventListener("mouseleave", () => {
       isHovering = false;
-      targetSpeed = 1; // Return to normal speed
+      targetSpeed = BASE_SPEED;
     });
 
     container.addEventListener("mousemove", (e) => {
-      if (!isHovering) return;
+      if (!isHovering || !animation) return;
 
       const rect = container.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
@@ -742,13 +756,14 @@ class Component extends DCLogic {
       // Calculate distance from center (0 to 1)
       const distFromCenter = Math.abs(e.clientX - centerX) / (rect.width / 2);
 
-      // Closer to center = slower (distFromCenter approaches 0)
-      // Further from center = faster (distFromCenter approaches 1)
-
-      // We want it to completely stop at the exact center.
-      // So if distFromCenter is very small, speed becomes 0.
-
-      targetSpeed = Math.pow(distFromCenter, 1.5) * 2; // Curve the speed so it drops quickly near center
+      if (distFromCenter < 0.05) {
+        // En el centro exacto: detener por completo para poder clickear / enfocar
+        targetSpeed = 0;
+      } else {
+        // Ligeramente acelerado si está hover pero no en el centro.
+        // Máxima velocidad (1.5) a los bordes, disminuyendo rápido al acercarse al centro.
+        targetSpeed = BASE_SPEED + Math.pow(distFromCenter, 1.2) * 1.5;
+      }
     });
   });
 </script>
