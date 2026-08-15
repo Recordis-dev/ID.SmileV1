@@ -738,26 +738,21 @@ class Component extends DCLogic {
 </script>
 
 <script>
-  // Robust Pure JS Marquee Controller
+  // Robust Pure JS Marquee Controller - v3 (Responsive, Mobile, SEO, Scroll-Physics)
   document.addEventListener("DOMContentLoaded", function() {
     const container = document.getElementById("ids-marquee-container");
     const content = document.getElementById("ids-marquee-content");
     if (!container || !content) return;
 
-    // Force override CSS animation so JS has total control
     content.style.animation = 'none';
     content.style.willChange = 'transform';
 
-    // Set base config
-    const BASE_SPEED = 0.5; // Slow crawl (pixels per frame)
+    const BASE_SPEED = 0.33;
     let targetSpeed = BASE_SPEED;
     let currentSpeed = BASE_SPEED;
     let currentX = 0;
     let isHovering = false;
-
-    // Get the exact width of the scrolling block to loop perfectly
-    // The content is already duplicated twice by the previous script (marquee_line1 and marquee_line2)
-    // We just need to scroll it and reset when it hits half its total width
+    let scrollTimeout;
 
     function lerp(start, end, amt) {
       return (1 - amt) * start + amt * end;
@@ -765,8 +760,6 @@ class Component extends DCLogic {
 
     function animate() {
       currentSpeed = lerp(currentSpeed, targetSpeed, 0.08);
-
-      // Stop completely if close to zero
       if (currentSpeed < 0.01) currentSpeed = 0;
 
       currentX -= currentSpeed;
@@ -780,34 +773,54 @@ class Component extends DCLogic {
       requestAnimationFrame(animate);
     }
 
-    // Delay start slightly to allow font loading/layout to settle
-    setTimeout(() => {
-        requestAnimationFrame(animate);
-    }, 100);
+    setTimeout(() => { requestAnimationFrame(animate); }, 100);
+
+    function handleInteraction(clientX) {
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const distFromCenter = Math.abs(clientX - centerX) / (rect.width / 2);
+
+      if (distFromCenter < 0.15) {
+        targetSpeed = 0;
+      } else {
+        targetSpeed = BASE_SPEED + Math.pow(distFromCenter, 1.8) * 5.0;
+      }
+    }
 
     container.addEventListener("mouseenter", () => { isHovering = true; });
     container.addEventListener("mouseleave", () => {
       isHovering = false;
       targetSpeed = BASE_SPEED;
     });
-
     container.addEventListener("mousemove", (e) => {
       if (!isHovering) return;
-
-      const rect = container.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-
-      // Distance from center: 0 (center) to 1 (edge)
-      const distFromCenter = Math.abs(e.clientX - centerX) / (rect.width / 2);
-
-      if (distFromCenter < 0.1) {
-        // Dead center: halt completely
-        targetSpeed = 0;
-      } else {
-        // Accelerate exponentially towards edges
-        targetSpeed = BASE_SPEED + Math.pow(distFromCenter, 1.5) * 4.0;
-      }
+      handleInteraction(e.clientX);
     });
+
+    container.addEventListener("touchstart", (e) => {
+      isHovering = true;
+      handleInteraction(e.touches[0].clientX);
+    }, {passive: true});
+
+    container.addEventListener("touchmove", (e) => {
+      if (!isHovering) return;
+      handleInteraction(e.touches[0].clientX);
+    }, {passive: true});
+
+    container.addEventListener("touchend", () => {
+      isHovering = false;
+      targetSpeed = BASE_SPEED;
+    });
+
+    window.addEventListener("scroll", () => {
+      if(isHovering) return;
+      targetSpeed = BASE_SPEED * 4.0;
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if(!isHovering) targetSpeed = BASE_SPEED;
+      }, 150);
+    }, {passive: true});
   });
 </script>
 </body>
