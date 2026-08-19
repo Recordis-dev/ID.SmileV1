@@ -1,0 +1,5 @@
+/* Aperture webfonts.
+   SUBSTITUTION: the source style calls for a neutral optical-sized grotesque (SF Pro class).
+   SF Pro is not redistributable, so Inter stands in for UI + display and IBM Plex Mono for specs.
+   Replace this @import with local @font-face rules if you license your own grotesque. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");

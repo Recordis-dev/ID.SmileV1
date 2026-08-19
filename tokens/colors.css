@@ -1,0 +1,66 @@
+:root {
+  /* ---- Light scale: monochrome luxury. Value, not hue, carries the hierarchy. ---- */
+  --white: #FFFFFF;
+  --snow:  #FAFBFC;
+  --mist:  #F2F4F6;
+  --fog:   #E7EAEE;
+  --line:  #DCDFE3;
+
+  --ink-400: #9AA1A9;
+  --ink-500: #7C838C;
+  --ink-600: #5A6169;
+  --ink-700: #3C4248;
+  --ink-800: #22262B;
+  --ink-900: #121417;
+
+  /* ---- Dark stage: for cinematic product sections ---- */
+  --void:     #08090B;
+  --graphite: #14161A;
+  --slate:    #1E2126;
+
+  /* ---- Single accent. Used for links, CTAs and nothing decorative. ---- */
+  --accent:       #0A66FF;
+  --accent-hover: #2A7BFF;
+  --accent-press: #0752CC;
+  --accent-soft:  #EAF1FF;
+
+  /* ---- Semantic status. Rare; never used as decoration. ---- */
+  --positive: #0E8A4F;
+  --caution:  #B5670A;
+  --critical: #D0342C;
+  --positive-soft: #E8F5EE;
+  --caution-soft:  #FBF1E4;
+  --critical-soft: #FBEBEA;
+
+  /* ---- Semantic aliases: reach for these in product code ---- */
+  --surface-page:         var(--white);
+  --surface-subtle:       var(--mist);
+  --surface-card:         var(--white);
+  --surface-inverse:      var(--void);
+  --surface-inverse-card: var(--graphite);
+  --surface-scrim:        rgba(8, 9, 11, 0.56);
+
+  --text-primary:   var(--ink-900);
+  --text-secondary: var(--ink-600);
+  --text-tertiary:  var(--ink-500);
+  --text-inverse:   var(--white);
+  --text-inverse-secondary: #A8AEB6;
+  --text-link:      var(--accent);
+
+  --border-hairline: var(--line);
+  --border-strong:   var(--ink-400);
+  --border-inverse:  rgba(255, 255, 255, 0.14);
+
+  --focus-ring: var(--accent);
+}
+
+[data-theme="dark"] {
+  --surface-page:   var(--void);
+  --surface-subtle: var(--graphite);
+  --surface-card:   var(--graphite);
+  --text-primary:   var(--white);
+  --text-secondary: #A8AEB6;
+  --text-tertiary:  var(--ink-500);
+  --border-hairline: rgba(255, 255, 255, 0.14);
+  --border-strong:   rgba(255, 255, 255, 0.28);
+}

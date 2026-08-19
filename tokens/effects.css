@@ -1,0 +1,37 @@
+:root {
+  --radius-0:    0px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-xl:   28px;
+  --radius-2xl:  42px;
+  --radius-pill: 980px;
+
+  --hairline: 1px solid var(--border-hairline);
+
+  /* Shadows are almost absent. Elevation comes from value contrast and space. */
+  --shadow-none:  none;
+  --shadow-card:  0 1px 2px rgba(18, 20, 23, 0.04), 0 8px 24px rgba(18, 20, 23, 0.05);
+  --shadow-raise: 0 2px 4px rgba(18, 20, 23, 0.05), 0 18px 44px rgba(18, 20, 23, 0.09);
+  --shadow-modal: 0 32px 90px rgba(8, 9, 11, 0.28);
+  --shadow-inset-hairline: inset 0 0 0 1px var(--border-hairline);
+
+  --blur-chrome: saturate(180%) blur(20px);
+  --scrim-chrome: rgba(250, 251, 252, 0.72);
+  --scrim-chrome-inverse: rgba(8, 9, 11, 0.72);
+
+  /* Motion: long, decelerating, never bouncy. */
+  --dur-instant: 120ms;
+  --dur-fast:    200ms;
+  --dur-base:    320ms;
+  --dur-slow:    560ms;
+  --dur-cinema:  900ms;
+  --ease-out:      cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-in-out:   cubic-bezier(0.52, 0.16, 0.24, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --z-base: 0;
+  --z-chrome: 100;
+  --z-overlay: 400;
+  --z-toast: 600;
+}

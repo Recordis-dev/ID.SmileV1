@@ -1,0 +1,20 @@
+<!-- @dsCard group="Spacing" viewport="700x240" name="Section rhythm" subtitle="Marketing sections breathe at 148px; app padding stays at 22" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { padding: 22px; background: var(--surface-page); }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
+  .sw { width: 92px; }
+  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
+  
+</style></head>
+<body>
+<div style="background:var(--mist);border-radius:var(--radius-md);padding:0 22px">
+    <div style="height:74px;border-bottom:1px dashed var(--border-strong);display:flex;align-items:flex-end;padding-bottom:6px"><span class="lbl">--section-y 148px (halved here)</span></div>
+    <div style="padding:22px 0"><div style="font:var(--text-h3);letter-spacing:var(--tracking-tight)">Content block</div><p style="font:var(--text-small);color:var(--text-secondary)">Inner rhythm uses 22 / 32 / 44.</p></div>
+    <div style="height:74px;border-top:1px dashed var(--border-strong)"></div>
+  </div>
+</body></html>

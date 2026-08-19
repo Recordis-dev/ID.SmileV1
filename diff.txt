@@ -1,0 +1,1900 @@
+diff --git a/.github/workflows/pages.yml b/.github/workflows/pages.yml
+new file mode 100644
+index 0000000..9003e2a
+--- /dev/null
++++ b/.github/workflows/pages.yml
+@@ -0,0 +1,34 @@
++name: Deploy static content to Pages
++
++on:
++  push:
++    branches: ["main", "master"]
++  workflow_dispatch:
++
++permissions:
++  contents: read
++  pages: write
++  id-token: write
++
++concurrency:
++  group: "pages"
++  cancel-in-progress: false
++
++jobs:
++  deploy:
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    runs-on: ubuntu-latest
++    steps:
++      - name: Checkout
++        uses: actions/checkout@v4
++      - name: Setup Pages
++        uses: actions/configure-pages@v5
++      - name: Upload artifact
++        uses: actions/upload-pages-artifact@v3
++        with:
++          path: '.'
++      - name: Deploy to GitHub Pages
++        id: deployment
++        uses: actions/deploy-pages@v4
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..694a13e
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,3 @@
++node_modules/
++.DS_Store
++.thumbnail
+diff --git a/SKILL.md b/SKILL.md
+new file mode 100644
+index 0000000..b6f2bc9
+--- /dev/null
++++ b/SKILL.md
+@@ -0,0 +1,9 @@
++---
++name: aperture-design
++description: Use this skill to generate well-branded interfaces and assets for Aperture, either for production or throwaway prototypes/mocks/etc. Contains essential design guidelines, colors, type, fonts, assets, and UI kit components for protoyping.
++user-invocable: true
++---
++
++Read the README.md file within this skill, and explore the other available files.
++If creating visual artifacts (slides, mocks, throwaway prototypes, etc), copy assets out and create static HTML files for the user to view. If working on production code, you can copy assets and read the rules here to become an expert in designing with this brand.
++If the user invokes this skill without any other guidance, ask them what they want to build or design, ask some questions, and act as an expert designer who outputs HTML artifacts _or_ production code, depending on the need.
+diff --git a/branches.txt b/branches.txt
+new file mode 100644
+index 0000000..80c3608
+--- /dev/null
++++ b/branches.txt
+@@ -0,0 +1,2 @@
++* jules-14995137332586959533-85f281f9
++  main
+diff --git a/components/core/Badge.d.ts b/components/core/Badge.d.ts
+new file mode 100644
+index 0000000..fbf5869
+--- /dev/null
++++ b/components/core/Badge.d.ts
+@@ -0,0 +1,7 @@
++/** Tiny uppercase status pill: "New", "In stock", "Backordered". */
++export interface BadgeProps {
++  tone?: "neutral" | "accent" | "positive" | "caution" | "critical" | "inverse";
++  children?: React.ReactNode;
++  style?: React.CSSProperties;
++}
++export function Badge(props: BadgeProps): JSX.Element;
+diff --git a/components/core/Badge.jsx b/components/core/Badge.jsx
+new file mode 100644
+index 0000000..601d73d
+--- /dev/null
++++ b/components/core/Badge.jsx
+@@ -0,0 +1,17 @@
++export function Badge({ tone = "neutral", children, style, ...rest }) {
++  const tones = {
++    neutral:  { background: "var(--mist)", color: "var(--text-secondary)" },
++    accent:   { background: "var(--accent-soft)", color: "var(--accent-press)" },
++    positive: { background: "var(--positive-soft)", color: "var(--positive)" },
++    caution:  { background: "var(--caution-soft)", color: "var(--caution)" },
++    critical: { background: "var(--critical-soft)", color: "var(--critical)" },
++    inverse:  { background: "rgba(255,255,255,0.12)", color: "var(--white)" }
++  }[tone];
++  return (
++    <span style={{
++      display: "inline-flex", alignItems: "center", alignSelf: "flex-start", flex: "0 0 auto", height: 22, padding: "0 10px",
++      borderRadius: "var(--radius-pill)", font: "var(--weight-medium) var(--size-micro)/1 var(--font-sans)",
++      letterSpacing: "var(--tracking-wide)", textTransform: "uppercase", whiteSpace: "nowrap", ...tones, ...style
++    }} {...rest}>{children}</span>
++  );
++}
+diff --git a/components/core/Badge.prompt.md b/components/core/Badge.prompt.md
+new file mode 100644
+index 0000000..81b38bb
+--- /dev/null
++++ b/components/core/Badge.prompt.md
+@@ -0,0 +1,7 @@
++A small uppercase status pill for one or two words of metadata.
++
++```jsx
++<Badge tone="accent">New</Badge>
++```
++
++Uppercase with wide tracking at 11px. Never use it as a decorative label or for counts — for a removable filter use `Tag`.
+diff --git a/components/core/Button.d.ts b/components/core/Button.d.ts
+new file mode 100644
+index 0000000..3abba2c
+--- /dev/null
++++ b/components/core/Button.d.ts
+@@ -0,0 +1,22 @@
++/**
++ * Pill button. One primary per view; everything else is secondary, outline or ghost.
++ * @startingPoint section="Core" subtitle="Pill buttons in five skins and three sizes" viewport="700x220"
++ */
++export interface ButtonProps {
++  /** primary = accent fill (the single CTA). secondary = grey fill. outline = hairline. inverse = white on dark stages. ghost = inline text link with no box. */
++  variant?: "primary" | "secondary" | "outline" | "inverse" | "ghost";
++  /** sm 32px, md 44px, lg 54px. */
++  size?: "sm" | "md" | "lg";
++  disabled?: boolean;
++  fullWidth?: boolean;
++  /** Lucide icon name shown before the label. */
++  icon?: string;
++  /** Lucide icon name shown after the label — usually "chevron-right". */
++  iconRight?: string;
++  /** Renders an <a> instead of a <button>. */
++  href?: string;
++  onClick?: (e: React.MouseEvent) => void;
++  children?: React.ReactNode;
++  style?: React.CSSProperties;
++}
++export function Button(props: ButtonProps): JSX.Element;
+diff --git a/components/core/Button.jsx b/components/core/Button.jsx
+new file mode 100644
+index 0000000..5ecd5c6
+--- /dev/null
++++ b/components/core/Button.jsx
+@@ -0,0 +1,45 @@
++export function Button({
++  variant = "primary", size = "md", disabled = false, fullWidth = false,
++  icon, iconRight, href, onClick, children, style, ...rest
++}) {
++  const [hover, setHover] = React.useState(false);
++  const [press, setPress] = React.useState(false);
++  const height = { sm: "var(--control-h-sm)", md: "var(--control-h)", lg: "var(--control-h-lg)" }[size];
++  const pad = { sm: "0 14px", md: "0 22px", lg: "0 30px" }[size];
++  const font = { sm: "var(--size-caption)", md: "var(--size-body-sm)", lg: "var(--size-body)" }[size];
++
++  const skins = {
++    primary: { background: hover ? "var(--accent-hover)" : "var(--accent)", color: "var(--white)", boxShadow: "none" },
++    secondary: { background: hover ? "var(--fog)" : "var(--mist)", color: "var(--text-primary)" },
++    outline: { background: hover ? "var(--mist)" : "transparent", color: "var(--text-primary)", boxShadow: "var(--shadow-inset-hairline)" },
++    inverse: { background: hover ? "var(--white)" : "rgba(255,255,255,0.92)", color: "var(--ink-900)" },
++    ghost: { background: "transparent", color: hover ? "var(--accent-hover)" : "var(--accent)", padding: 0, height: "auto" }
++  }[variant];
++
++  const s = {
++    display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "var(--space-2)",
++    height, padding: pad, width: fullWidth ? "100%" : "auto",
++    font: "var(--weight-medium) " + font + "/1 var(--font-sans)",
++    letterSpacing: "var(--tracking-normal)",
++    borderRadius: "var(--radius-pill)", border: "none", cursor: disabled ? "default" : "pointer",
++    textDecoration: "none", whiteSpace: "nowrap",
++    opacity: disabled ? 0.36 : 1,
++    transform: press && !disabled ? "scale(0.97)" : "scale(1)",
++    transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out)",
++    ...skins, ...style
++  };
++
++  const Tag = href ? "a" : "button";
++  return (
++    <Tag
++      href={href} onClick={disabled ? undefined : onClick} disabled={!href ? disabled : undefined}
++      onMouseEnter={() => setHover(true)} onMouseLeave={() => { setHover(false); setPress(false); }}
++      onMouseDown={() => setPress(true)} onMouseUp={() => setPress(false)}
++      style={s} {...rest}
++    >
++      {icon ? <Icon name={icon} size={size === "sm" ? 14 : 16} /> : null}
++      {children}
++      {iconRight ? <Icon name={iconRight} size={size === "sm" ? 14 : 16} /> : null}
++    </Tag>
++  );
++}
+diff --git a/components/core/Button.prompt.md b/components/core/Button.prompt.md
+new file mode 100644
+index 0000000..e4f5947
+--- /dev/null
++++ b/components/core/Button.prompt.md
+@@ -0,0 +1,8 @@
++The system's only button; always a full pill, never a rounded rectangle.
++
++```jsx
++<Button variant="primary" size="lg">Buy</Button>
++<Button variant="ghost" iconRight="chevron-right">Learn more</Button>
++```
++
++Variants: `primary` (accent fill — exactly one per view), `secondary`, `outline`, `inverse` (on dark stages), `ghost` (inline link, no box). Press state scales to 0.97; hover only shifts the fill one step. Labels are one or two words, sentence case, no trailing punctuation.
+diff --git a/components/core/Card.d.ts b/components/core/Card.d.ts
+new file mode 100644
+index 0000000..af333b2
+--- /dev/null
++++ b/components/core/Card.d.ts
+@@ -0,0 +1,14 @@
++/**
++ * Generously rounded container. Four tones; elevation is near-flat by default.
++ * @startingPoint section="Core" subtitle="Card tones: light, subtle, hairline, dark" viewport="700x260"
++ */
++export interface CardProps {
++  tone?: "light" | "subtle" | "hairline" | "dark";
++  /** Adds a 2px lift and deeper shadow on hover. Only for cards that navigate. */
++  interactive?: boolean;
++  padding?: string;
++  radius?: string;
++  children?: React.ReactNode;
++  style?: React.CSSProperties;
++}
++export function Card(props: CardProps): JSX.Element;
+diff --git a/components/core/Card.jsx b/components/core/Card.jsx
+new file mode 100644
+index 0000000..6885d10
+--- /dev/null
++++ b/components/core/Card.jsx
+@@ -0,0 +1,22 @@
++export function Card({ tone = "light", interactive = false, padding = "var(--space-7)", radius = "var(--radius-xl)", children, style, ...rest }) {
++  const [hover, setHover] = React.useState(false);
++  const tones = {
++    light:   { background: "var(--surface-card)", color: "var(--text-primary)", boxShadow: "var(--shadow-card)" },
++    subtle:  { background: "var(--surface-subtle)", color: "var(--text-primary)", boxShadow: "none" },
++    hairline:{ background: "var(--white)", color: "var(--text-primary)", boxShadow: "var(--shadow-inset-hairline)" },
++    dark:    { background: "var(--surface-inverse-card)", color: "var(--text-inverse)", boxShadow: "none" }
++  }[tone];
++  return (
++    <div
++      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
++      style={{
++        padding, borderRadius: radius, overflow: "hidden",
++        transform: interactive && hover ? "translateY(-2px)" : "translateY(0)",
++        transition: "transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out)",
++        ...tones,
++        boxShadow: interactive && hover ? "var(--shadow-raise)" : tones.boxShadow,
++        ...style
++      }} {...rest}
++    >{children}</div>
++  );
++}
+diff --git a/components/core/Card.prompt.md b/components/core/Card.prompt.md
+new file mode 100644
+index 0000000..96aaa80
+--- /dev/null
++++ b/components/core/Card.prompt.md
+@@ -0,0 +1,7 @@
++The container for everything grid-like: product tiles, feature panels, spec blocks.
++
++```jsx
++<Card tone="subtle" interactive>…</Card>
++```
++
++Radius is large (28px default, 42px for full-bleed feature panels) and shadows stay barely visible — separation comes from the `subtle` fill against white. `dark` tone hosts cinematic imagery.
+diff --git a/components/core/Icon.d.ts b/components/core/Icon.d.ts
+new file mode 100644
+index 0000000..f2cac1e
+--- /dev/null
++++ b/components/core/Icon.d.ts
+@@ -0,0 +1,12 @@
++/** Thin-stroke Lucide glyph, sized and coloured from the surrounding text. */
++export interface IconProps {
++  /** Lucide icon name, e.g. "chevron-right", "search", "shopping-bag". */
++  name: string;
++  /** Box size in px. 16 in dense UI, 18 inline with body copy, 24 in nav. */
++  size?: number;
++  /** Stroke width. Keep 1.5 to match the hairline system; never above 2. */
++  stroke?: number;
++  color?: string;
++  style?: React.CSSProperties;
++}
++export function Icon(props: IconProps): JSX.Element;
+diff --git a/components/core/Icon.jsx b/components/core/Icon.jsx
+new file mode 100644
+index 0000000..c70ba0f
+--- /dev/null
++++ b/components/core/Icon.jsx
+@@ -0,0 +1,15 @@
++export function Icon({ name, size = 18, stroke = 1.5, color = "currentColor", style, ...rest }) {
++  const ref = React.useRef(null);
++  React.useEffect(() => {
++    if (window.lucide && ref.current) window.lucide.createIcons({ nameAttr: "data-lucide", root: ref.current });
++  }, [name, size, stroke]);
++  return (
++    <span
++      ref={ref}
++      style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: size, height: size, color, flex: "0 0 auto", ...style }}
++      {...rest}
++    >
++      <i data-lucide={name} width={size} height={size} stroke-width={stroke}></i>
++    </span>
++  );
++}
+diff --git a/components/core/Icon.prompt.md b/components/core/Icon.prompt.md
+new file mode 100644
+index 0000000..03ac9c9
+--- /dev/null
++++ b/components/core/Icon.prompt.md
+@@ -0,0 +1,7 @@
++Renders a single thin-stroke Lucide glyph; use it anywhere an icon appears instead of inline SVG or emoji.
++
++```jsx
++<Icon name="chevron-right" size={16} />
++```
++
++Requires the Lucide UMD script on the page (`https://unpkg.com/lucide@latest/dist/umd/lucide.min.js`). Stroke stays at 1.5 so glyphs read at the same weight as 1px hairlines. Icons are monochrome and inherit `currentColor` — never colour them for decoration.
+diff --git a/components/core/Tag.d.ts b/components/core/Tag.d.ts
+new file mode 100644
+index 0000000..40b28f9
+--- /dev/null
++++ b/components/core/Tag.d.ts
+@@ -0,0 +1,10 @@
++/** Selectable / removable hairline chip used for filters and configuration choices. */
++export interface TagProps {
++  selected?: boolean;
++  /** Renders a small x; called when it is clicked. */
++  onRemove?: (e: React.MouseEvent) => void;
++  onClick?: (e: React.MouseEvent) => void;
++  children?: React.ReactNode;
++  style?: React.CSSProperties;
++}
++export function Tag(props: TagProps): JSX.Element;
+diff --git a/components/core/Tag.jsx b/components/core/Tag.jsx
+new file mode 100644
+index 0000000..d7f8b5c
+--- /dev/null
++++ b/components/core/Tag.jsx
+@@ -0,0 +1,27 @@
++export function Tag({ selected = false, onRemove, onClick, children, style, ...rest }) {
++  const [hover, setHover] = React.useState(false);
++  return (
++    <span
++      onClick={onClick}
++      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
++      style={{
++        display: "inline-flex", alignItems: "center", gap: "var(--space-2)", height: 32, padding: "0 14px",
++        borderRadius: "var(--radius-pill)",
++        background: selected ? "var(--ink-900)" : hover ? "var(--mist)" : "transparent",
++        color: selected ? "var(--white)" : "var(--text-primary)",
++        boxShadow: selected ? "none" : "var(--shadow-inset-hairline)",
++        font: "var(--weight-regular) var(--size-body-sm)/1 var(--font-sans)",
++        cursor: onClick ? "pointer" : "default", whiteSpace: "nowrap", flex: "0 0 auto", alignSelf: "flex-start",
++        transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
++        ...style
++      }} {...rest}
++    >
++      {children}
++      {onRemove ? (
++        <span onClick={(e) => { e.stopPropagation(); onRemove(e); }} style={{ display: "inline-flex", cursor: "pointer", opacity: 0.6 }}>
++          <Icon name="x" size={13} />
++        </span>
++      ) : null}
++    </span>
++  );
++}
+diff --git a/components/core/Tag.prompt.md b/components/core/Tag.prompt.md
+new file mode 100644
+index 0000000..6445da0
+--- /dev/null
++++ b/components/core/Tag.prompt.md
+@@ -0,0 +1,8 @@
++Hairline chip for filters, facets and small configuration choices.
++
++```jsx
++<Tag selected onClick={pick}>256 GB</Tag>
++<Tag onRemove={clear}>Titanium</Tag>
++```
++
++Unselected is a 1px hairline on transparent; selected inverts to solid ink. Sentence case, no icons except the remove x.
+diff --git a/components/core/core.card.html b/components/core/core.card.html
+new file mode 100644
+index 0000000..24ef57b
+--- /dev/null
++++ b/components/core/core.card.html
+@@ -0,0 +1,61 @@
++<!-- @dsCard group="Components" viewport="700x300" name="Core — buttons, badges, tags, cards" subtitle="Pill buttons in five skins, status pills, chips, card tones" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../../styles.css">
++<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
++<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
++<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
++<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
++<script src="../../jsx-loader.js"></script>
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); color: var(--text-tertiary); }
++</style></head>
++<body>
++<div id="root"></div>
++<script type="text/plain" id="demo">
++function Demo() {
++  const [sel, setSel] = React.useState("256 GB");
++  const row = { display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" };
++  return (
++    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
++      <div style={row}>
++        <Button>Buy</Button>
++        <Button variant="secondary">Add to bag</Button>
++        <Button variant="outline">Compare</Button>
++        <Button variant="ghost" iconRight="chevron-right">Learn more</Button>
++        <Button disabled>Sold out</Button>
++      </div>
++      <div style={row}>
++        <Button size="sm">Small</Button>
++        <Button size="md" icon="shopping-bag">Medium</Button>
++        <Button size="lg">Large</Button>
++        <span style={{ background: "var(--void)", padding: "10px 14px", borderRadius: 999 }}><Button variant="inverse">Inverse</Button></span>
++      </div>
++      <div style={row}>
++        <Badge tone="accent">New</Badge>
++        <Badge tone="positive">In stock</Badge>
++        <Badge tone="caution">Backordered</Badge>
++        <Badge>Refurbished</Badge>
++        {["128 GB", "256 GB", "512 GB"].map(t => <Tag key={t} selected={sel === t} onClick={() => setSel(t)}>{t}</Tag>)}
++        <Tag onRemove={() => {}}>Titanium</Tag>
++      </div>
++      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
++        {[["light","Light"],["subtle","Subtle"],["hairline","Hairline"],["dark","Dark"]].map(([tone,l]) => (
++          <Card key={tone} tone={tone} padding="16px" radius="var(--radius-lg)" interactive style={{ height: 74 }}>
++            <span style={{ font: "var(--weight-medium) var(--size-body-sm)/1 var(--font-sans)" }}>{l}</span>
++          </Card>
++        ))}
++      </div>
++    </div>
++  );
++}
++ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
++</script>
++<script>
++  ApertureLoad(["Icon.jsx","Button.jsx","Badge.jsx","Tag.jsx","Card.jsx"]).then(function () {
++    var code = document.getElementById("demo").textContent;
++    (0, eval)(Babel.transform(code, { presets: [["react", { runtime: "classic" }]] }).code);
++  });
++</script>
++</body></html>
+diff --git a/components/feedback/Dialog.d.ts b/components/feedback/Dialog.d.ts
+new file mode 100644
+index 0000000..8ff6a30
+--- /dev/null
++++ b/components/feedback/Dialog.d.ts
+@@ -0,0 +1,13 @@
++/** Centred modal over a blurred scrim. For decisions only — never for content that could be a page. */
++export interface DialogProps {
++  open?: boolean;
++  title?: string;
++  description?: string;
++  onClose?: () => void;
++  /** Buttons, right-aligned: secondary first, primary last. */
++  actions?: React.ReactNode;
++  children?: React.ReactNode;
++  width?: number;
++  style?: React.CSSProperties;
++}
++export function Dialog(props: DialogProps): JSX.Element | null;
+diff --git a/components/feedback/Dialog.jsx b/components/feedback/Dialog.jsx
+new file mode 100644
+index 0000000..5dfb2e4
+--- /dev/null
++++ b/components/feedback/Dialog.jsx
+@@ -0,0 +1,23 @@
++export function Dialog({ open = false, title, description, onClose, actions, children, width = 480, style, ...rest }) {
++  if (!open) return null;
++  return (
++    <div onClick={onClose} style={{
++      position: "fixed", inset: 0, zIndex: 400, background: "var(--surface-scrim)",
++      backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center",
++      padding: "var(--space-6)", animation: "none"
++    }}>
++      <div onClick={(e) => e.stopPropagation()} style={{
++        width, maxWidth: "100%", background: "var(--surface-card)", borderRadius: "var(--radius-lg)",
++        boxShadow: "var(--shadow-modal)", padding: "var(--space-7)",
++        display: "flex", flexDirection: "column", gap: "var(--space-5)", ...style
++      }} {...rest}>
++        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
++          {title ? <h3 style={{ font: "var(--weight-semibold) var(--size-title)/var(--leading-snug) var(--font-sans)", letterSpacing: "var(--tracking-tight)" }}>{title}</h3> : null}
++          {description ? <p style={{ font: "var(--text-copy)", color: "var(--text-secondary)" }}>{description}</p> : null}
++        </div>
++        {children}
++        <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--space-3)" }}>{actions}</div>
++      </div>
++    </div>
++  );
++}
+diff --git a/components/feedback/Dialog.prompt.md b/components/feedback/Dialog.prompt.md
+new file mode 100644
+index 0000000..195bbdd
+--- /dev/null
++++ b/components/feedback/Dialog.prompt.md
+@@ -0,0 +1,8 @@
++A decision surface: confirm, choose, or stop.
++
++```jsx
++<Dialog open={o} title="Remove from bag?" description="You can add it back later."
++  onClose={close} actions={<><Button variant="secondary" onClick={close}>Keep</Button><Button onClick={remove}>Remove</Button></>} />
++```
++
++18px radius, 60px shadow, blurred scrim. Actions are right-aligned with the primary last. Title is 28px semibold; body is secondary ink.
+diff --git a/components/feedback/Toast.d.ts b/components/feedback/Toast.d.ts
+new file mode 100644
+index 0000000..ee3eb35
+--- /dev/null
++++ b/components/feedback/Toast.d.ts
+@@ -0,0 +1,10 @@
++/** Transient confirmation pill, bottom-centre, auto-dismissing after ~4s. */
++export interface ToastProps {
++  message: string;
++  tone?: "neutral" | "positive" | "critical";
++  /** Lucide icon name shown before the message. */
++  icon?: string;
++  onDismiss?: () => void;
++  style?: React.CSSProperties;
++}
++export function Toast(props: ToastProps): JSX.Element;
+diff --git a/components/feedback/Toast.jsx b/components/feedback/Toast.jsx
+new file mode 100644
+index 0000000..44a4a6e
+--- /dev/null
++++ b/components/feedback/Toast.jsx
+@@ -0,0 +1,22 @@
++export function Toast({ message, tone = "neutral", icon, onDismiss, style, ...rest }) {
++  const tones = {
++    neutral:  { background: "var(--ink-900)", color: "var(--white)" },
++    positive: { background: "var(--positive)", color: "var(--white)" },
++    critical: { background: "var(--critical)", color: "var(--white)" }
++  }[tone];
++  return (
++    <div style={{
++      display: "inline-flex", alignItems: "center", gap: "var(--space-3)",
++      padding: "12px 18px", borderRadius: "var(--radius-pill)", boxShadow: "var(--shadow-raise)",
++      font: "var(--weight-medium) var(--size-body-sm)/1.2 var(--font-sans)", ...tones, ...style
++    }} {...rest}>
++      {icon ? <Icon name={icon} size={16} /> : null}
++      <span>{message}</span>
++      {onDismiss ? (
++        <span onClick={onDismiss} style={{ cursor: "pointer", opacity: 0.7, display: "inline-flex" }}>
++          <Icon name="x" size={14} />
++        </span>
++      ) : null}
++    </div>
++  );
++}
+diff --git a/components/feedback/Toast.prompt.md b/components/feedback/Toast.prompt.md
+new file mode 100644
+index 0000000..ce32200
+--- /dev/null
++++ b/components/feedback/Toast.prompt.md
+@@ -0,0 +1,7 @@
++Confirms something that already happened; never asks a question.
++
++```jsx
++<Toast tone="positive" icon="check" message="Added to bag" />
++```
++
++Solid ink pill with white text, floating bottom-centre. One at a time, one short sentence, no titles.
+diff --git a/components/feedback/Tooltip.d.ts b/components/feedback/Tooltip.d.ts
+new file mode 100644
+index 0000000..ac46fb7
+--- /dev/null
++++ b/components/feedback/Tooltip.d.ts
+@@ -0,0 +1,8 @@
++/** Small ink label on hover. Explains an icon; never holds essential copy. */
++export interface TooltipProps {
++  label: string;
++  placement?: "top" | "bottom" | "left" | "right";
++  children?: React.ReactNode;
++  style?: React.CSSProperties;
++}
++export function Tooltip(props: TooltipProps): JSX.Element;
+diff --git a/components/feedback/Tooltip.jsx b/components/feedback/Tooltip.jsx
+new file mode 100644
+index 0000000..d1e1572
+--- /dev/null
++++ b/components/feedback/Tooltip.jsx
+@@ -0,0 +1,24 @@
++export function Tooltip({ label, placement = "top", children, style, ...rest }) {
++  const [show, setShow] = React.useState(false);
++  const pos = {
++    top:    { bottom: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)" },
++    bottom: { top: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)" },
++    left:   { right: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" },
++    right:  { left: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" }
++  }[placement];
++  return (
++    <span
++      onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}
++      style={{ position: "relative", display: "inline-flex", ...style }} {...rest}
++    >
++      {children}
++      <span style={{
++        position: "absolute", ...pos, zIndex: 400, pointerEvents: "none",
++        padding: "6px 10px", borderRadius: "var(--radius-sm)", background: "var(--ink-900)",
++        color: "var(--white)", font: "var(--text-legal)", whiteSpace: "nowrap",
++        opacity: show ? 1 : 0,
++        transition: "opacity var(--dur-fast) var(--ease-out)"
++      }}>{label}</span>
++    </span>
++  );
++}
+diff --git a/components/feedback/Tooltip.prompt.md b/components/feedback/Tooltip.prompt.md
+new file mode 100644
+index 0000000..8f82fc7
+--- /dev/null
++++ b/components/feedback/Tooltip.prompt.md
+@@ -0,0 +1,7 @@
++Names an icon-only control on hover.
++
++```jsx
++<Tooltip label="Search"><Icon name="search" /></Tooltip>
++```
++
++13px white on solid ink, 8px radius, fades in over 200ms. Two or three words maximum; if it needs a sentence, the UI needs a label instead.
+diff --git a/components/feedback/feedback.card.html b/components/feedback/feedback.card.html
+new file mode 100644
+index 0000000..c248303
+--- /dev/null
++++ b/components/feedback/feedback.card.html
+@@ -0,0 +1,48 @@
++<!-- @dsCard group="Components" viewport="700x300" name="Feedback — dialog, toast, tooltip" subtitle="Blurred-scrim modal, ink toast pill, hover label" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../../styles.css">
++<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
++<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
++<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
++<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
++<script src="../../jsx-loader.js"></script>
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); color: var(--text-tertiary); }
++</style></head>
++<body>
++<div id="root"></div>
++<script type="text/plain" id="demo">
++function Demo() {
++  const [open, setOpen] = React.useState(false);
++  return (
++    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
++      <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
++        <Button variant="outline" onClick={() => setOpen(true)}>Open dialog</Button>
++        <Tooltip label="Search"><span style={{ padding: 8, borderRadius: 999, boxShadow: "var(--shadow-inset-hairline)", display: "inline-flex" }}><Icon name="search" size={16} /></span></Tooltip>
++        <Tooltip label="Your bag" placement="right"><span style={{ padding: 8, borderRadius: 999, boxShadow: "var(--shadow-inset-hairline)", display: "inline-flex" }}><Icon name="shopping-bag" size={16} /></span></Tooltip>
++      </div>
++      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
++        <Toast tone="positive" icon="check" message="Added to bag" />
++        <Toast message="Saved for later" onDismiss={() => {}} />
++        <Toast tone="critical" icon="triangle-alert" message="Payment declined" />
++      </div>
++      <div style={{ position: "relative", height: 96, borderRadius: 12, overflow: "hidden", boxShadow: "var(--shadow-inset-hairline)" }}>
++        <span style={{ position: "absolute", left: 16, top: 16, font: "var(--text-small)", color: "var(--text-tertiary)" }}>dialog renders over the page scrim</span>
++      </div>
++      <Dialog open={open} title="Remove from bag?" description="You can add it back at any time."
++        onClose={() => setOpen(false)}
++        actions={<><Button variant="secondary" onClick={() => setOpen(false)}>Keep</Button><Button onClick={() => setOpen(false)}>Remove</Button></>} />
++    </div>
++  );
++}
++ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
++</script>
++<script>
++  ApertureLoad(["../core/Icon.jsx","../core/Button.jsx","Dialog.jsx","Toast.jsx","Tooltip.jsx"]).then(function () {
++    var code = document.getElementById("demo").textContent;
++    (0, eval)(Babel.transform(code, { presets: [["react", { runtime: "classic" }]] }).code);
++  });
++</script>
++</body></html>
+diff --git a/components/forms/Checkbox.d.ts b/components/forms/Checkbox.d.ts
+new file mode 100644
+index 0000000..73a2015
+--- /dev/null
++++ b/components/forms/Checkbox.d.ts
+@@ -0,0 +1,11 @@
++/** 20px square checkbox with 6px radius; fills accent when checked. */
++export interface CheckboxProps {
++  checked?: boolean;
++  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
++  label?: string;
++  /** Second line in tertiary ink. */
++  description?: string;
++  disabled?: boolean;
++  style?: React.CSSProperties;
++}
++export function Checkbox(props: CheckboxProps): JSX.Element;
+diff --git a/components/forms/Checkbox.jsx b/components/forms/Checkbox.jsx
+new file mode 100644
+index 0000000..579460a
+--- /dev/null
++++ b/components/forms/Checkbox.jsx
+@@ -0,0 +1,20 @@
++export function Checkbox({ checked = false, onChange, label, description, disabled, style, ...rest }) {
++  return (
++    <label style={{ display: "flex", gap: "var(--space-3)", alignItems: description ? "flex-start" : "center",
++      cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.4 : 1, ...style }}>
++      <input type="checkbox" checked={checked} onChange={onChange} disabled={disabled}
++        style={{ position: "absolute", opacity: 0, width: 0, height: 0 }} {...rest} />
++      <span style={{
++        width: 20, height: 20, flex: "0 0 auto", borderRadius: 6, marginTop: description ? 2 : 0,
++        display: "inline-flex", alignItems: "center", justifyContent: "center",
++        background: checked ? "var(--accent)" : "var(--white)",
++        boxShadow: checked ? "none" : "var(--shadow-inset-hairline)",
++        transition: "background var(--dur-fast) var(--ease-out)"
++      }}>{checked ? <Icon name="check" size={13} stroke={2.5} color="var(--white)" /> : null}</span>
++      <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
++        {label ? <span style={{ font: "var(--text-copy)" }}>{label}</span> : null}
++        {description ? <span style={{ font: "var(--text-small)", color: "var(--text-tertiary)" }}>{description}</span> : null}
++      </span>
++    </label>
++  );
++}
+diff --git a/components/forms/Checkbox.prompt.md b/components/forms/Checkbox.prompt.md
+new file mode 100644
+index 0000000..bb64953
+--- /dev/null
++++ b/components/forms/Checkbox.prompt.md
+@@ -0,0 +1,7 @@
++Multi-select control for options and consents.
++
++```jsx
++<Checkbox checked={v} onChange={t} label="Add engraving" description="Free, adds one day" />
++```
++
++The box is the only element that carries the accent colour in a form. Use `Switch` instead when the change takes effect immediately.
+diff --git a/components/forms/Input.d.ts b/components/forms/Input.d.ts
+new file mode 100644
+index 0000000..895b9dd
+--- /dev/null
++++ b/components/forms/Input.d.ts
+@@ -0,0 +1,16 @@
++/** Single-line text field with optional label, leading icon, hint and error. */
++export interface InputProps {
++  label?: string;
++  hint?: string;
++  /** Replaces the hint and switches the border to critical. */
++  error?: string;
++  type?: string;
++  value?: string;
++  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
++  placeholder?: string;
++  disabled?: boolean;
++  /** Lucide icon name shown inside, before the text. */
++  icon?: string;
++  style?: React.CSSProperties;
++}
++export function Input(props: InputProps): JSX.Element;
+diff --git a/components/forms/Input.jsx b/components/forms/Input.jsx
+new file mode 100644
+index 0000000..c62df59
+--- /dev/null
++++ b/components/forms/Input.jsx
+@@ -0,0 +1,26 @@
++export function Input({ label, hint, error, type = "text", value, onChange, placeholder, disabled, icon, style, ...rest }) {
++  const [focus, setFocus] = React.useState(false);
++  return (
++    <label style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", ...style }}>
++      {label ? <span style={{ font: "var(--weight-medium) var(--size-caption)/1.2 var(--font-sans)", color: "var(--text-secondary)" }}>{label}</span> : null}
++      <span style={{
++        display: "flex", alignItems: "center", gap: "var(--space-2)",
++        height: "var(--control-h)", padding: "0 16px", background: disabled ? "var(--mist)" : "var(--white)",
++        borderRadius: "var(--radius-md)",
++        boxShadow: error ? "inset 0 0 0 1px var(--critical)" : focus ? "inset 0 0 0 2px var(--accent)" : "var(--shadow-inset-hairline)",
++        transition: "box-shadow var(--dur-fast) var(--ease-out)"
++      }}>
++        {icon ? <Icon name={icon} size={16} color="var(--text-tertiary)" /> : null}
++        <input
++          type={type} value={value} onChange={onChange} placeholder={placeholder} disabled={disabled}
++          onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
++          style={{ flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent",
++            font: "var(--text-copy)", letterSpacing: "var(--tracking-normal)", color: "var(--text-primary)" }}
++          {...rest}
++        />
++      </span>
++      {error ? <span style={{ font: "var(--text-legal)", color: "var(--critical)" }}>{error}</span>
++        : hint ? <span style={{ font: "var(--text-legal)", color: "var(--text-tertiary)" }}>{hint}</span> : null}
++    </label>
++  );
++}
+diff --git a/components/forms/Input.prompt.md b/components/forms/Input.prompt.md
+new file mode 100644
+index 0000000..ec8653d
+--- /dev/null
++++ b/components/forms/Input.prompt.md
+@@ -0,0 +1,7 @@
++Text field for forms and search.
++
++```jsx
++<Input label="Email" placeholder="you@studio.com" hint="Used for order updates" />
++```
++
++44px tall, 12px radius, 1px hairline that becomes a 2px accent ring on focus. Labels are 13px medium in secondary ink above the field — never floating placeholders.
+diff --git a/components/forms/Radio.d.ts b/components/forms/Radio.d.ts
+new file mode 100644
+index 0000000..2dec27f
+--- /dev/null
++++ b/components/forms/Radio.d.ts
+@@ -0,0 +1,11 @@
++/** Single-choice control; the ring fills with a 6px accent inset when selected. */
++export interface RadioProps {
++  checked?: boolean;
++  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
++  label?: string;
++  description?: string;
++  name?: string;
++  disabled?: boolean;
++  style?: React.CSSProperties;
++}
++export function Radio(props: RadioProps): JSX.Element;
+diff --git a/components/forms/Radio.jsx b/components/forms/Radio.jsx
+new file mode 100644
+index 0000000..02e09e5
+--- /dev/null
++++ b/components/forms/Radio.jsx
+@@ -0,0 +1,20 @@
++export function Radio({ checked = false, onChange, label, description, name, disabled, style, ...rest }) {
++  return (
++    <label style={{ display: "flex", gap: "var(--space-3)", alignItems: description ? "flex-start" : "center",
++      cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.4 : 1, ...style }}>
++      <input type="radio" name={name} checked={checked} onChange={onChange} disabled={disabled}
++        style={{ position: "absolute", opacity: 0, width: 0, height: 0 }} {...rest} />
++      <span style={{
++        width: 20, height: 20, flex: "0 0 auto", borderRadius: "50%", marginTop: description ? 2 : 0,
++        display: "inline-flex", alignItems: "center", justifyContent: "center",
++        background: "var(--white)",
++        boxShadow: checked ? "inset 0 0 0 6px var(--accent)" : "var(--shadow-inset-hairline)",
++        transition: "box-shadow var(--dur-fast) var(--ease-out)"
++      }}></span>
++      <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
++        {label ? <span style={{ font: "var(--text-copy)" }}>{label}</span> : null}
++        {description ? <span style={{ font: "var(--text-small)", color: "var(--text-tertiary)" }}>{description}</span> : null}
++      </span>
++    </label>
++  );
++}
+diff --git a/components/forms/Radio.prompt.md b/components/forms/Radio.prompt.md
+new file mode 100644
+index 0000000..f412c15
+--- /dev/null
++++ b/components/forms/Radio.prompt.md
+@@ -0,0 +1,7 @@
++Mutually exclusive choice in a list of three or more; for two, prefer `Tag` chips.
++
++```jsx
++<Radio name="ship" checked label="Standard" description="Free, 3-5 days" />
++```
++
++Always paired with a label; never a bare ring. Group with 16px gaps in a vertical stack.
+diff --git a/components/forms/Select.d.ts b/components/forms/Select.d.ts
+new file mode 100644
+index 0000000..15f05ed
+--- /dev/null
++++ b/components/forms/Select.d.ts
+@@ -0,0 +1,12 @@
++/** Native select styled to match Input, with a thin chevron. */
++export interface SelectOption { value: string; label: string; }
++export interface SelectProps {
++  label?: string;
++  value?: string;
++  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
++  /** Strings or {value,label} objects. */
++  options?: (SelectOption | string)[];
++  disabled?: boolean;
++  style?: React.CSSProperties;
++}
++export function Select(props: SelectProps): JSX.Element;
+diff --git a/components/forms/Select.jsx b/components/forms/Select.jsx
+new file mode 100644
+index 0000000..9989ba0
+--- /dev/null
++++ b/components/forms/Select.jsx
+@@ -0,0 +1,28 @@
++export function Select({ label, value, onChange, options = [], disabled, style, ...rest }) {
++  const [focus, setFocus] = React.useState(false);
++  return (
++    <label style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", ...style }}>
++      {label ? <span style={{ font: "var(--weight-medium) var(--size-caption)/1.2 var(--font-sans)", color: "var(--text-secondary)" }}>{label}</span> : null}
++      <span style={{ position: "relative", display: "flex", alignItems: "center" }}>
++        <select
++          value={value} onChange={onChange} disabled={disabled}
++          onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
++          style={{
++            appearance: "none", width: "100%", height: "var(--control-h)", padding: "0 42px 0 16px",
++            background: disabled ? "var(--mist)" : "var(--white)", border: "none",
++            borderRadius: "var(--radius-md)",
++            boxShadow: focus ? "inset 0 0 0 2px var(--accent)" : "var(--shadow-inset-hairline)",
++            font: "var(--text-copy)", color: "var(--text-primary)", outline: "none", cursor: "pointer",
++            transition: "box-shadow var(--dur-fast) var(--ease-out)"
++          }}
++          {...rest}
++        >
++          {options.map((o) => <option key={o.value ?? o} value={o.value ?? o}>{o.label ?? o}</option>)}
++        </select>
++        <span style={{ position: "absolute", right: 14, pointerEvents: "none" }}>
++          <Icon name="chevron-down" size={16} color="var(--text-tertiary)" />
++        </span>
++      </span>
++    </label>
++  );
++}
+diff --git a/components/forms/Select.prompt.md b/components/forms/Select.prompt.md
+new file mode 100644
+index 0000000..906071c
+--- /dev/null
++++ b/components/forms/Select.prompt.md
+@@ -0,0 +1,7 @@
++Dropdown for lists of six or more options; below that, use `Tag` chips instead.
++
++```jsx
++<Select label="Finish" options={["Graphite", "Silver", "Bone"]} />
++```
++
++Matches `Input` exactly in height, radius and focus ring. The chevron is a 16px Lucide glyph in tertiary ink.
+diff --git a/components/forms/Switch.d.ts b/components/forms/Switch.d.ts
+new file mode 100644
+index 0000000..aa50efd
+--- /dev/null
++++ b/components/forms/Switch.d.ts
+@@ -0,0 +1,9 @@
++/** Immediate-effect toggle. 50x30 track, positive green when on. */
++export interface SwitchProps {
++  checked?: boolean;
++  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
++  label?: string;
++  disabled?: boolean;
++  style?: React.CSSProperties;
++}
++export function Switch(props: SwitchProps): JSX.Element;
+diff --git a/components/forms/Switch.jsx b/components/forms/Switch.jsx
+new file mode 100644
+index 0000000..50f16b8
+--- /dev/null
++++ b/components/forms/Switch.jsx
+@@ -0,0 +1,22 @@
++export function Switch({ checked = false, onChange, label, disabled, style, ...rest }) {
++  return (
++    <label style={{ display: "inline-flex", alignItems: "center", gap: "var(--space-3)",
++      cursor: disabled ? "default" : "pointer", opacity: disabled ? 0.4 : 1, ...style }}>
++      <input type="checkbox" role="switch" checked={checked} disabled={disabled}
++        onChange={onChange} style={{ position: "absolute", opacity: 0, width: 0, height: 0 }} {...rest} />
++      <span style={{
++        width: 50, height: 30, borderRadius: "var(--radius-pill)", padding: 3, flex: "0 0 auto",
++        background: checked ? "var(--positive)" : "var(--fog)",
++        transition: "background var(--dur-base) var(--ease-out)"
++      }}>
++        <span style={{
++          display: "block", width: 24, height: 24, borderRadius: "50%", background: "var(--white)",
++          boxShadow: "0 1px 3px rgba(8,9,11,0.22)",
++          transform: checked ? "translateX(20px)" : "translateX(0)",
++          transition: "transform var(--dur-base) var(--ease-out)"
++        }}></span>
++      </span>
++      {label ? <span style={{ font: "var(--text-copy)" }}>{label}</span> : null}
++    </label>
++  );
++}
+diff --git a/components/forms/Switch.prompt.md b/components/forms/Switch.prompt.md
+new file mode 100644
+index 0000000..27b69ae
+--- /dev/null
++++ b/components/forms/Switch.prompt.md
+@@ -0,0 +1,7 @@
++Settings toggle whose change applies at once (no Save button).
++
++```jsx
++<Switch checked={on} onChange={set} label="Spatial audio" />
++```
++
++The one place green appears in the system. If the change needs confirming, use `Checkbox` in a form instead.
+diff --git a/components/forms/forms.card.html b/components/forms/forms.card.html
+new file mode 100644
+index 0000000..7a5b009
+--- /dev/null
++++ b/components/forms/forms.card.html
+@@ -0,0 +1,51 @@
++<!-- @dsCard group="Components" viewport="700x330" name="Forms — input, select, checkbox, radio, switch" subtitle="44px controls, 12px radius, 2px accent focus ring" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../../styles.css">
++<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
++<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
++<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
++<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
++<script src="../../jsx-loader.js"></script>
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); color: var(--text-tertiary); }
++</style></head>
++<body>
++<div id="root"></div>
++<script type="text/plain" id="demo">
++function Demo() {
++  const [v, setV] = React.useState("");
++  const [chk, setChk] = React.useState(true);
++  const [ship, setShip] = React.useState("Standard");
++  const [on, setOn] = React.useState(true);
++  return (
++    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22 }}>
++      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
++        <Input label="Email" placeholder="you@studio.com" value={v} onChange={e => setV(e.target.value)} hint="Used for order updates" />
++        <Input label="Search" icon="search" placeholder="Search Aperture" />
++        <Input label="Card number" error="Check this number" defaultValue="4242 4242" />
++      </div>
++      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
++        <Select label="Finish" options={["Graphite", "Silver", "Bone"]} />
++        <Checkbox checked={chk} onChange={() => setChk(!chk)} label="Add engraving" description="Free, adds one day" />
++        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
++          {["Standard", "Express"].map(s => (
++            <Radio key={s} name="ship" checked={ship === s} onChange={() => setShip(s)} label={s}
++              description={s === "Standard" ? "Free, 3-5 days" : "$12, tomorrow"} />
++          ))}
++        </div>
++        <Switch checked={on} onChange={() => setOn(!on)} label="Spatial audio" />
++      </div>
++    </div>
++  );
++}
++ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
++</script>
++<script>
++  ApertureLoad(["../core/Icon.jsx","Input.jsx","Select.jsx","Checkbox.jsx","Radio.jsx","Switch.jsx"]).then(function () {
++    var code = document.getElementById("demo").textContent;
++    (0, eval)(Babel.transform(code, { presets: [["react", { runtime: "classic" }]] }).code);
++  });
++</script>
++</body></html>
+diff --git a/components/navigation/Nav.d.ts b/components/navigation/Nav.d.ts
+new file mode 100644
+index 0000000..4ab0039
+--- /dev/null
++++ b/components/navigation/Nav.d.ts
+@@ -0,0 +1,16 @@
++/**
++ * Slim 48px translucent global bar with blur; the product's only persistent chrome.
++ * @startingPoint section="Navigation" subtitle="48px translucent global bar" viewport="700x150"
++ */
++export interface NavProps {
++  /** Wordmark text — the system ships no logo file, so the brand name is set in type. */
++  brand?: string;
++  items?: string[];
++  active?: string;
++  onSelect?: (item: string) => void;
++  tone?: "light" | "dark";
++  /** Right-aligned icons, usually <Icon name="search" /> and <Icon name="shopping-bag" />. */
++  actions?: React.ReactNode;
++  style?: React.CSSProperties;
++}
++export function Nav(props: NavProps): JSX.Element;
+diff --git a/components/navigation/Nav.jsx b/components/navigation/Nav.jsx
+new file mode 100644
+index 0000000..548f953
+--- /dev/null
++++ b/components/navigation/Nav.jsx
+@@ -0,0 +1,31 @@
++export function Nav({ brand = "Aperture", items = [], active, onSelect, tone = "light", actions, style, ...rest }) {
++  return (
++    <nav style={{
++      position: "sticky", top: 0, zIndex: 100, height: 48,
++      background: tone === "dark" ? "var(--scrim-chrome-inverse)" : "var(--scrim-chrome)",
++      backdropFilter: "var(--blur-chrome)", WebkitBackdropFilter: "var(--blur-chrome)",
++      borderBottom: tone === "dark" ? "1px solid var(--border-inverse)" : "1px solid var(--border-hairline)",
++      color: tone === "dark" ? "var(--text-inverse)" : "var(--text-primary)", ...style
++    }} {...rest}>
++      <div style={{ maxWidth: "var(--container-wide)", margin: "0 auto", padding: "0 var(--gutter)",
++        height: "100%", display: "flex", alignItems: "center", gap: "var(--space-7)" }}>
++        <span style={{ font: "var(--weight-semibold) var(--size-body-sm)/1 var(--font-sans)", letterSpacing: "var(--tracking-tight)" }}>{brand}</span>
++        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-6)", flex: 1 }}>
++          {items.map((it) => {
++            const on = it === active;
++            return (
++              <a key={it} href="#" onClick={(e) => { e.preventDefault(); onSelect && onSelect(it); }}
++                style={{ font: "var(--weight-regular) var(--size-caption)/1 var(--font-sans)",
++                  color: "inherit", opacity: on ? 1 : 0.72, textDecoration: "none",
++                  transition: "opacity var(--dur-fast) var(--ease-out)" }}
++                onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
++                onMouseLeave={(e) => (e.currentTarget.style.opacity = on ? 1 : 0.72)}
++              >{it}</a>
++            );
++          })}
++        </div>
++        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-5)", opacity: 0.82 }}>{actions}</div>
++      </div>
++    </nav>
++  );
++}
+diff --git a/components/navigation/Nav.prompt.md b/components/navigation/Nav.prompt.md
+new file mode 100644
+index 0000000..36d32db
+--- /dev/null
++++ b/components/navigation/Nav.prompt.md
+@@ -0,0 +1,7 @@
++The global bar. One per page, sticky, translucent over whatever scrolls beneath.
++
++```jsx
++<Nav brand="Aperture" items={["Halo", "Studio", "Support"]} active="Halo" actions={<Icon name="search" size={16} />} />
++```
++
++48px tall, 13px links at 72% opacity rising to 100% on hover, 1px hairline underneath. Use `tone="dark"` when the page opens on a dark stage.
+diff --git a/components/navigation/Tabs.d.ts b/components/navigation/Tabs.d.ts
+new file mode 100644
+index 0000000..b2f3e62
+--- /dev/null
++++ b/components/navigation/Tabs.d.ts
+@@ -0,0 +1,9 @@
++/** In-page section switch: hairline underline, or a segmented pill for two to four short options. */
++export interface TabsProps {
++  items?: string[];
++  active?: string;
++  onSelect?: (item: string) => void;
++  variant?: "underline" | "segmented";
++  style?: React.CSSProperties;
++}
++export function Tabs(props: TabsProps): JSX.Element;
+diff --git a/components/navigation/Tabs.jsx b/components/navigation/Tabs.jsx
+new file mode 100644
+index 0000000..6b816ca
+--- /dev/null
++++ b/components/navigation/Tabs.jsx
+@@ -0,0 +1,30 @@
++export function Tabs({ items = [], active, onSelect, variant = "underline", style, ...rest }) {
++  const seg = variant === "segmented";
++  return (
++    <div style={{
++      display: "inline-flex", alignItems: "center", gap: seg ? 4 : "var(--space-6)",
++      padding: seg ? 4 : 0, background: seg ? "var(--mist)" : "transparent",
++      borderRadius: seg ? "var(--radius-pill)" : 0,
++      borderBottom: seg ? "none" : "1px solid var(--border-hairline)", ...style
++    }} {...rest}>
++      {items.map((it) => {
++        const on = it === active;
++        return (
++          <button key={it} onClick={() => onSelect && onSelect(it)}
++            style={{
++              border: "none", cursor: "pointer", background: seg && on ? "var(--white)" : "transparent",
++              borderRadius: seg ? "var(--radius-pill)" : 0,
++              padding: seg ? "8px 18px" : "0 0 12px",
++              boxShadow: seg && on ? "0 1px 3px rgba(18,20,23,0.10)" : "none",
++              font: (on ? "var(--weight-medium) " : "var(--weight-regular) ") + "var(--size-body-sm)/1 var(--font-sans)",
++              color: on ? "var(--text-primary)" : "var(--text-tertiary)",
++              borderBottom: seg ? "none" : on ? "2px solid var(--ink-900)" : "2px solid transparent",
++              marginBottom: seg ? 0 : -1,
++              transition: "color var(--dur-fast) var(--ease-out)"
++            }}
++          >{it}</button>
++        );
++      })}
++    </div>
++  );
++}
+diff --git a/components/navigation/Tabs.prompt.md b/components/navigation/Tabs.prompt.md
+new file mode 100644
+index 0000000..8f51369
+--- /dev/null
++++ b/components/navigation/Tabs.prompt.md
+@@ -0,0 +1,8 @@
++Switches content within a page; never used for primary navigation (that is `Nav`).
++
++```jsx
++<Tabs items={["Overview", "Specs", "Compare"]} active={tab} onSelect={setTab} />
++<Tabs variant="segmented" items={["Buy", "Lease"]} active={mode} onSelect={setMode} />
++```
++
++Underline variant: 2px ink rule under the active label, inactive labels in tertiary ink. Segmented sits in a mist track with a white thumb.
+diff --git a/components/navigation/navigation.card.html b/components/navigation/navigation.card.html
+new file mode 100644
+index 0000000..e4078ea
+--- /dev/null
++++ b/components/navigation/navigation.card.html
+@@ -0,0 +1,48 @@
++<!-- @dsCard group="Components" viewport="700x300" name="Navigation — nav, tabs" subtitle="Translucent 48px bar; underline and segmented tabs" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../../styles.css">
++<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
++<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
++<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
++<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
++<script src="../../jsx-loader.js"></script>
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); color: var(--text-tertiary); }
++</style></head>
++<body>
++<div id="root"></div>
++<script type="text/plain" id="demo">
++function Demo() {
++  const [page, setPage] = React.useState("Halo");
++  const [tab, setTab] = React.useState("Overview");
++  const [mode, setMode] = React.useState("Buy");
++  return (
++    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
++      <div style={{ borderRadius: 12, overflow: "hidden", boxShadow: "var(--shadow-inset-hairline)" }}>
++        <Nav brand="Aperture" items={["Halo", "Studio", "Support"]} active={page} onSelect={setPage}
++          actions={<><Icon name="search" size={16} /><Icon name="shopping-bag" size={16} /></>} style={{ position: "static" }} />
++        <div style={{ height: 34, background: "var(--snow)" }}></div>
++      </div>
++      <div style={{ borderRadius: 12, overflow: "hidden", background: "linear-gradient(120deg,#16181B,#2A2F36)" }}>
++        <Nav tone="dark" brand="Aperture" items={["Halo", "Studio", "Support"]} active={page} onSelect={setPage}
++          actions={<><Icon name="search" size={16} /><Icon name="shopping-bag" size={16} /></>} style={{ position: "static" }} />
++        <div style={{ height: 34 }}></div>
++      </div>
++      <div style={{ display: "flex", alignItems: "center", gap: 32, flexWrap: "wrap" }}>
++        <Tabs items={["Overview", "Specs", "Compare"]} active={tab} onSelect={setTab} />
++        <Tabs variant="segmented" items={["Buy", "Lease"]} active={mode} onSelect={setMode} />
++      </div>
++    </div>
++  );
++}
++ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
++</script>
++<script>
++  ApertureLoad(["../core/Icon.jsx","Nav.jsx","Tabs.jsx"]).then(function () {
++    var code = document.getElementById("demo").textContent;
++    (0, eval)(Babel.transform(code, { presets: [["react", { runtime: "classic" }]] }).code);
++  });
++</script>
++</body></html>
+diff --git a/devlog.md b/devlog.md
+new file mode 100644
+index 0000000..666bf86
+--- /dev/null
++++ b/devlog.md
+@@ -0,0 +1,28 @@
++# ID Smile Development Log
++
++## Iteration 1: Initial Deployment & Setup
++*   **What happened:** Setup the repo, deployed to GitHub Pages, added base UI kits and design system HTML files from attachments.
++*   **What worked:** Deployment actions and raw HTML parsing works without a build system.
++*   **What didn't work:** N/A.
++
++## Iteration 2: Content Adjustments (Dr. Benja & Services)
++*   **What happened:** Replaced Dra. Esbreidy references with Odont. Benjamín Avendaño. Added a new array of 7 distinct services in 3 languages to the Marquee.
++*   **What worked:** Content extraction and basic regex replacement.
++*   **What didn't work:** Initial regex attempts to modify the scrolling marquee broke the HTML structure or duplicated elements.
++*   **Learnings:** The marquee was driven by an infinite CSS animation (`@keyframes idsTicker`) duplicating `<span>` blocks. Replacing inner content must be done precisely to maintain the loop structure.
++
++## Iteration 3: Marquee Physics & SLP Architecture
++*   **What happened:** Attempted to add complex mouse-tracking physics to the marquee using `Web Animations API`. Tried to inject huge Service Landing Page (SLP) blocks into the main HTML.
++*   **What worked:** The SLP injection worked visually but made the page huge.
++*   **What didn't work:** `Web Animations API` (`playbackRate`) failed to apply smoothly across all browsers/DOM states. The hover effect inline styles were conflicting with the animation loop.
++*   **Learnings:** Do not rely on CSS animations or the Web Animations API for complex frame-by-frame physics (acceleration, dead-zones). Use a pure `requestAnimationFrame` loop with `translate3d`.
++
++## Iteration 4: Pure JS Marquee & Mega Menu
++*   **What happened:** Ripped out CSS animations for the marquee, replaced with a pure JS render loop. Built a Durum.ai style CSS Mega-Menu. Extracted SLPs into standalone HTML files (`servicio-ortodoncia.html`, etc.).
++*   **What worked:** Standalone HTML architecture drastically improved maintainability. Mega-menu CSS worked cleanly.
++*   **What didn't work:** The user reported the Marquee is *still* too fast, lacks mobile responsiveness (touch events), and the SEO semantic structure of the Mega Menu needs improvement.
++
++## Iteration 5: SEO, Mobile Physics & Self-Healing
++*   **What happened:** Refactored Mega Menu into semantic `<nav>` with `<ul>`, `<li>` and `aria-label` attributes. Decreased Marquee base speed to `0.33` and widened the central dead-zone to `0.15`. Added `touchstart` and `touchmove` events for mobile interaction. Added a `scroll` event listener that temporarily speeds up the marquee. Re-wrote `devlog.md`.
++*   **What worked:** The dual-approach structure is now entirely responsive and semantically ready for AI crawlers.
++*   **Learnings:** Moving from `<div>`s to `<ul>/<li>` inside mega-menus is crucial for screen readers and SEO spiders to understand the hierarchy of SLPs vs Blogs.
+diff --git a/guidelines/brand-imagery.html b/guidelines/brand-imagery.html
+new file mode 100644
+index 0000000..787ed7c
+--- /dev/null
++++ b/guidelines/brand-imagery.html
+@@ -0,0 +1,19 @@
++<!-- @dsCard group="Brand" viewport="700x200" name="Imagery treatment" subtitle="Placeholder stages: real photography goes here" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:14px">
++    <div style="flex:1;height:150px;border-radius:var(--radius-lg);background:radial-gradient(120% 90% at 50% 8%, #2A2F36 0%, #0D0F12 62%, #08090B 100%);display:flex;align-items:flex-end;padding:14px"><span class="lbl" style="color:#8E959D">dark stage · single object, top light</span></div>
++    <div style="flex:1;height:150px;border-radius:var(--radius-lg);background:radial-gradient(120% 90% at 50% 10%, #FFFFFF 0%, #EFF1F4 70%, #E4E7EB 100%);display:flex;align-items:flex-end;padding:14px"><span class="lbl">light stage · shadowless, edge-lit</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/brand-remix.html b/guidelines/brand-remix.html
+new file mode 100644
+index 0000000..3e63e92
+--- /dev/null
++++ b/guidelines/brand-remix.html
+@@ -0,0 +1,29 @@
++<!-- @dsCard group="Brand" viewport="700x230" name="Remix layer" subtitle="70% Aperture / 30% ID Smile: teal accent, rose editorial, Bricolage display" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<link rel="stylesheet" href="../tokens/remix.css">
++<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&display=swap" rel="stylesheet">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
++  .col { display: flex; flex-direction: column; gap: 6px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: .02em; color: var(--text-tertiary); }
++  .chip { width: 92px; height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  .kicker { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--editorial); display: flex; align-items: center; gap: 10px; }
++  .kicker i { width: 26px; height: 1px; background: var(--editorial); display: block; }
++  h2 { font-family: var(--font-display); font-weight: var(--weight-display); font-size: 34px; line-height: 1.05; letter-spacing: -.03em; margin: 10px 0 0; color: var(--text-primary); }
++</style></head>
++<body>
++<div class="row">
++  <div class="col"><div class="chip" style="background:#2E9AA0"></div><div class="lbl">accent</div></div>
++  <div class="col"><div class="chip" style="background:#37B4BA"></div><div class="lbl">accent-hover</div></div>
++  <div class="col"><div class="chip" style="background:#0E5C63"></div><div class="lbl">accent-press</div></div>
++  <div class="col"><div class="chip" style="background:#D2506B"></div><div class="lbl">editorial</div></div>
++  <div class="col" style="margin-left:12px;gap:0">
++    <div class="kicker"><i></i>Editorial kicker</div>
++    <h2>Display stays Bricolage.</h2>
++    <div class="lbl" style="margin-top:10px">body, UI and specs stay Aperture</div>
++  </div>
++</div>
++</body></html>
+diff --git a/guidelines/brand-wordmark.html b/guidelines/brand-wordmark.html
+new file mode 100644
+index 0000000..fb2441a
+--- /dev/null
++++ b/guidelines/brand-wordmark.html
+@@ -0,0 +1,21 @@
++<!-- @dsCard group="Brand" viewport="700x170" name="Wordmark (type only)" subtitle="No logo file was supplied — the name is set in type" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:40px;align-items:flex-end">
++    <span style="font:var(--weight-semibold) 40px/1 var(--font-sans);letter-spacing:-0.03em">Aperture</span>
++    <span style="font:var(--weight-semibold) 20px/1 var(--font-sans);letter-spacing:-0.02em">Aperture</span>
++    <span style="font:var(--weight-semibold) 13px/1 var(--font-sans);letter-spacing:-0.01em">Aperture</span>
++    <span class="lbl" style="max-width:180px">Semibold, tight tracking, ink-900 on light or white on void. Never outlined, never coloured.</span>
++  </div>
++</body></html>
+diff --git a/guidelines/colors-accent.html b/guidelines/colors-accent.html
+new file mode 100644
+index 0000000..edfea20
+--- /dev/null
++++ b/guidelines/colors-accent.html
+@@ -0,0 +1,22 @@
++<!-- @dsCard group="Colors" viewport="700x170" name="Accent" subtitle="One blue: links, the single CTA, focus rings" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row">
++    <div class="sw col" style="gap:6px"><div class="chip" style="background:#0A66FF"></div><div class="lbl">accent</div><div class="lbl" style="color:var(--text-secondary)">#0A66FF</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#2A7BFF"></div><div class="lbl">accent-hover</div><div class="lbl" style="color:var(--text-secondary)">#2A7BFF</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#0752CC"></div><div class="lbl">accent-press</div><div class="lbl" style="color:var(--text-secondary)">#0752CC</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#EAF1FF"></div><div class="lbl">accent-soft</div><div class="lbl" style="color:var(--text-secondary)">#EAF1FF</div></div>
++    <div class="col" style="gap:6px;margin-left:12px">
++      <a href="#" style="font:var(--text-copy)">Learn more about Halo</a>
++      <span class="lbl">links inherit --text-link</span>
++    </div>
++  </div>
++</body></html>
+diff --git a/guidelines/colors-dark-stage.html b/guidelines/colors-dark-stage.html
+new file mode 100644
+index 0000000..6f81c81
+--- /dev/null
++++ b/guidelines/colors-dark-stage.html
+@@ -0,0 +1,22 @@
++<!-- @dsCard group="Colors" viewport="700x170" name="Dark stage" subtitle="Cinematic sections sit on void, cards on graphite" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="background:var(--void);margin:-22px;padding:22px;height:126px">
++    <div class="sw col" style="gap:6px"><div class="chip" style="background:#08090B"></div><div class="lbl">void</div><div class="lbl" style="color:var(--text-secondary)">#08090B</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#14161A"></div><div class="lbl">graphite</div><div class="lbl" style="color:var(--text-secondary)">#14161A</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#1E2126"></div><div class="lbl">slate</div><div class="lbl" style="color:var(--text-secondary)">#1E2126</div></div>
++    <div class="col" style="gap:4px;margin-left:12px">
++      <span style="font:var(--weight-semibold) 24px/1.1 var(--font-sans);letter-spacing:var(--tracking-tight);color:#fff">White on void</span>
++      <span style="font:var(--text-small);color:#A8AEB6">Secondary copy at #A8AEB6</span>
++    </div>
++  </div>
++</body></html>
+diff --git a/guidelines/colors-ink.html b/guidelines/colors-ink.html
+new file mode 100644
+index 0000000..8248e3f
+--- /dev/null
++++ b/guidelines/colors-ink.html
+@@ -0,0 +1,18 @@
++<!-- @dsCard group="Colors" viewport="700x170" name="Ink scale" subtitle="Type and dark fills; 900 is never pure black" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row">
++    <div class="sw col" style="gap:6px"><div class="chip" style="background:#9AA1A9"></div><div class="lbl">ink-400</div><div class="lbl" style="color:var(--text-secondary)">#9AA1A9</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#7C838C"></div><div class="lbl">ink-500</div><div class="lbl" style="color:var(--text-secondary)">#7C838C</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#5A6169"></div><div class="lbl">ink-600</div><div class="lbl" style="color:var(--text-secondary)">#5A6169</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#3C4248"></div><div class="lbl">ink-700</div><div class="lbl" style="color:var(--text-secondary)">#3C4248</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#22262B"></div><div class="lbl">ink-800</div><div class="lbl" style="color:var(--text-secondary)">#22262B</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#121417"></div><div class="lbl">ink-900</div><div class="lbl" style="color:var(--text-secondary)">#121417</div></div>
++  </div>
++</body></html>
+diff --git a/guidelines/colors-neutral.html b/guidelines/colors-neutral.html
+new file mode 100644
+index 0000000..4667213
+--- /dev/null
++++ b/guidelines/colors-neutral.html
+@@ -0,0 +1,18 @@
++<!-- @dsCard group="Colors" viewport="700x170" name="Paper scale" subtitle="Five near-whites carry every light surface" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row">
++    <div class="sw col" style="gap:6px"><div class="chip" style="background:#FFFFFF"></div><div class="lbl">white</div><div class="lbl" style="color:var(--text-secondary)">#FFFFFF</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#FAFBFC"></div><div class="lbl">snow</div><div class="lbl" style="color:var(--text-secondary)">#FAFBFC</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#F2F4F6"></div><div class="lbl">mist</div><div class="lbl" style="color:var(--text-secondary)">#F2F4F6</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#E7EAEE"></div><div class="lbl">fog</div><div class="lbl" style="color:var(--text-secondary)">#E7EAEE</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#DCDFE3"></div><div class="lbl">line</div><div class="lbl" style="color:var(--text-secondary)">#DCDFE3</div></div>
++  </div>
++</body></html>
+diff --git a/guidelines/colors-semantic.html b/guidelines/colors-semantic.html
+new file mode 100644
+index 0000000..48e1704
+--- /dev/null
++++ b/guidelines/colors-semantic.html
+@@ -0,0 +1,19 @@
++<!-- @dsCard group="Colors" viewport="700x170" name="Status" subtitle="Rare, never decorative" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row">
++    <div class="sw col" style="gap:6px"><div class="chip" style="background:#0E8A4F"></div><div class="lbl">positive</div><div class="lbl" style="color:var(--text-secondary)">#0E8A4F</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#B5670A"></div><div class="lbl">caution</div><div class="lbl" style="color:var(--text-secondary)">#B5670A</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#D0342C"></div><div class="lbl">critical</div><div class="lbl" style="color:var(--text-secondary)">#D0342C</div></div>
++    <div class="sw col" style="gap:6px"><div class="chip" style="background:#E8F5EE"></div><div class="lbl">positive-soft</div><div class="lbl" style="color:var(--text-secondary)">#E8F5EE</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#FBF1E4"></div><div class="lbl">caution-soft</div><div class="lbl" style="color:var(--text-secondary)">#FBF1E4</div></div><div class="sw col" style="gap:6px"><div class="chip" style="background:#FBEBEA"></div><div class="lbl">critical-soft</div><div class="lbl" style="color:var(--text-secondary)">#FBEBEA</div></div>
++  </div>
++</body></html>
+diff --git a/guidelines/spacing-containers.html b/guidelines/spacing-containers.html
+new file mode 100644
+index 0000000..192d29f
+--- /dev/null
++++ b/guidelines/spacing-containers.html
+@@ -0,0 +1,18 @@
++<!-- @dsCard group="Spacing" viewport="700x190" name="Containers" subtitle="692 / 1024 / 1280 / 1440, 22px gutters" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="col" style="gap:8px">
++    <div style="display:flex;align-items:center;gap:10px"><div style="width:48%;height:20px;background:var(--fog);border-radius:3px"></div><span class="lbl">692 narrow · prose</span></div><div style="display:flex;align-items:center;gap:10px"><div style="width:71%;height:20px;background:var(--fog);border-radius:3px"></div><span class="lbl">1024 default</span></div><div style="display:flex;align-items:center;gap:10px"><div style="width:89%;height:20px;background:var(--fog);border-radius:3px"></div><span class="lbl">1280 wide · grids</span></div><div style="display:flex;align-items:center;gap:10px"><div style="width:100%;height:20px;background:var(--fog);border-radius:3px"></div><span class="lbl">1440 full-bleed cap</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/spacing-controls.html b/guidelines/spacing-controls.html
+new file mode 100644
+index 0000000..329ee0c
+--- /dev/null
++++ b/guidelines/spacing-controls.html
+@@ -0,0 +1,20 @@
++<!-- @dsCard group="Spacing" viewport="700x150" name="Control heights" subtitle="32 / 44 / 54px" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:18px">
++    <div style="height:32px;padding:0 14px;border-radius:var(--radius-pill);background:var(--mist);display:flex;align-items:center;font:var(--weight-medium) 13px var(--font-sans)">32 sm</div>
++    <div style="height:44px;padding:0 22px;border-radius:var(--radius-pill);background:var(--accent);color:#fff;display:flex;align-items:center;font:var(--weight-medium) 15px var(--font-sans)">44 md</div>
++    <div style="height:54px;padding:0 30px;border-radius:var(--radius-pill);background:var(--ink-900);color:#fff;display:flex;align-items:center;font:var(--weight-medium) 17px var(--font-sans)">54 lg</div>
++  </div>
++</body></html>
+diff --git a/guidelines/spacing-scale.html b/guidelines/spacing-scale.html
+new file mode 100644
+index 0000000..e3b2446
+--- /dev/null
++++ b/guidelines/spacing-scale.html
+@@ -0,0 +1,18 @@
++<!-- @dsCard group="Spacing" viewport="700x160" name="Scale" subtitle="4 8 12 16 22 32 44 60 — the gutter unit is 22, not 24" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="align-items:flex-end;gap:10px">
++    <div class="col" style="gap:6px;align-items:flex-start"><div style="width:4px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">1 4px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:8px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">2 8px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:12px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">3 12px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:16px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">4 16px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:22px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">5 22px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:32px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">6 32px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:44px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">7 44px</span></div><div class="col" style="gap:6px;align-items:flex-start"><div style="width:60px;height:22px;background:var(--ink-900);border-radius:3px"></div><span class="lbl">8 60px</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/spacing-section-rhythm.html b/guidelines/spacing-section-rhythm.html
+new file mode 100644
+index 0000000..453ad47
+--- /dev/null
++++ b/guidelines/spacing-section-rhythm.html
+@@ -0,0 +1,20 @@
++<!-- @dsCard group="Spacing" viewport="700x240" name="Section rhythm" subtitle="Marketing sections breathe at 148px; app padding stays at 22" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div style="background:var(--mist);border-radius:var(--radius-md);padding:0 22px">
++    <div style="height:74px;border-bottom:1px dashed var(--border-strong);display:flex;align-items:flex-end;padding-bottom:6px"><span class="lbl">--section-y 148px (halved here)</span></div>
++    <div style="padding:22px 0"><div style="font:var(--text-h3);letter-spacing:var(--tracking-tight)">Content block</div><p style="font:var(--text-small);color:var(--text-secondary)">Inner rhythm uses 22 / 32 / 44.</p></div>
++    <div style="height:74px;border-top:1px dashed var(--border-strong)"></div>
++  </div>
++</body></html>
+diff --git a/guidelines/surfaces-blur-chrome.html b/guidelines/surfaces-blur-chrome.html
+new file mode 100644
+index 0000000..7700748
+--- /dev/null
++++ b/guidelines/surfaces-blur-chrome.html
+@@ -0,0 +1,21 @@
++<!-- @dsCard group="Surfaces" viewport="700x170" name="Translucent chrome" subtitle="72% scrim + saturate(180%) blur(20px)" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div style="position:relative;height:126px;border-radius:var(--radius-md);overflow:hidden;background:linear-gradient(120deg,var(--ink-900),var(--slate) 55%,var(--ink-700))">
++    <div style="position:absolute;inset:0 0 auto 0;height:48px;background:var(--scrim-chrome-inverse);backdrop-filter:var(--blur-chrome);-webkit-backdrop-filter:var(--blur-chrome);border-bottom:1px solid var(--border-inverse);display:flex;align-items:center;gap:24px;padding:0 22px;color:#fff;font:var(--weight-regular) 13px var(--font-sans)">
++      <span style="font-weight:600">Aperture</span><span style="opacity:.72">Halo</span><span style="opacity:.72">Studio</span><span style="opacity:.72">Support</span>
++    </div>
++    <div style="position:absolute;bottom:14px;left:22px" class="lbl">chrome floats over the stage, never opaque</div>
++  </div>
++</body></html>
+diff --git a/guidelines/surfaces-hairlines.html b/guidelines/surfaces-hairlines.html
+new file mode 100644
+index 0000000..7baac0b
+--- /dev/null
++++ b/guidelines/surfaces-hairlines.html
+@@ -0,0 +1,18 @@
++<!-- @dsCard group="Surfaces" viewport="700x160" name="Hairlines" subtitle="1px #DCDFE3 does the work borders usually do" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="col" style="gap:0;max-width:560px">
++    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 2px;border-bottom:var(--hairline);font:var(--text-copy)"><span>Overview</span><span style="color:var(--text-tertiary);font:var(--text-legal)">→</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 2px;border-bottom:var(--hairline);font:var(--text-copy)"><span>Specifications</span><span style="color:var(--text-tertiary);font:var(--text-legal)">→</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 2px;border-bottom:var(--hairline);font:var(--text-copy)"><span>Compare models</span><span style="color:var(--text-tertiary);font:var(--text-legal)">→</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 2px;border-bottom:var(--hairline);font:var(--text-copy)"><span>Support</span><span style="color:var(--text-tertiary);font:var(--text-legal)">→</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/surfaces-motion.html b/guidelines/surfaces-motion.html
+new file mode 100644
+index 0000000..56ce61f
+--- /dev/null
++++ b/guidelines/surfaces-motion.html
+@@ -0,0 +1,43 @@
++<!-- @dsCard group="Surfaces" viewport="700x190" name="Motion" subtitle="Long decelerating ease-out; no bounce, ever" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  @keyframes sl { from { transform: translateX(0) } to { transform: translateX(190%) } }
++</style></head>
++<body>
++<div class="col" style="gap:10px">
++    
++      <div style="display:flex;align-items:center;gap:12px">
++        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
++          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-fast) var(--ease-out) infinite alternate"></div>
++        </div>
++        <span class="lbl" style="width:110px">fast 200ms</span>
++      </div>
++      <div style="display:flex;align-items:center;gap:12px">
++        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
++          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-base) var(--ease-out) infinite alternate"></div>
++        </div>
++        <span class="lbl" style="width:110px">base 320ms</span>
++      </div>
++      <div style="display:flex;align-items:center;gap:12px">
++        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
++          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-slow) var(--ease-out) infinite alternate"></div>
++        </div>
++        <span class="lbl" style="width:110px">slow 560ms</span>
++      </div>
++      <div style="display:flex;align-items:center;gap:12px">
++        <div style="flex:1;height:8px;background:var(--mist);border-radius:99px;overflow:hidden">
++          <div style="height:100%;width:34%;background:var(--ink-900);border-radius:99px;animation:sl var(--dur-cinema) var(--ease-out) infinite alternate"></div>
++        </div>
++        <span class="lbl" style="width:110px">cinema 900ms</span>
++      </div>
++    <span class="lbl">cubic-bezier(0.28, 0.11, 0.32, 1)</span>
++  </div>
++</body></html>
+diff --git a/guidelines/surfaces-radii.html b/guidelines/surfaces-radii.html
+new file mode 100644
+index 0000000..88f11fe
+--- /dev/null
++++ b/guidelines/surfaces-radii.html
+@@ -0,0 +1,19 @@
++<!-- @dsCard group="Surfaces" viewport="700x170" name="Radii" subtitle="8 12 18 28 42 and the 980px pill" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:16px">
++    <div class="col" style="gap:6px"><div style="width:88px;height:66px;background:var(--mist);border-radius:8px"></div><span class="lbl">sm 8px</span></div><div class="col" style="gap:6px"><div style="width:88px;height:66px;background:var(--mist);border-radius:12px"></div><span class="lbl">md 12px</span></div><div class="col" style="gap:6px"><div style="width:88px;height:66px;background:var(--mist);border-radius:18px"></div><span class="lbl">lg 18px</span></div><div class="col" style="gap:6px"><div style="width:88px;height:66px;background:var(--mist);border-radius:28px"></div><span class="lbl">xl 28px</span></div><div class="col" style="gap:6px"><div style="width:88px;height:66px;background:var(--mist);border-radius:42px"></div><span class="lbl">2xl 42px</span></div>
++    <div class="col" style="gap:6px"><div style="width:88px;height:44px;background:var(--ink-900);border-radius:980px"></div><span class="lbl">pill 980px</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/surfaces-shadows.html b/guidelines/surfaces-shadows.html
+new file mode 100644
+index 0000000..3e2bc61
+--- /dev/null
++++ b/guidelines/surfaces-shadows.html
+@@ -0,0 +1,18 @@
++<!-- @dsCard group="Surfaces" viewport="700x190" name="Elevation" subtitle="Almost none: hairline, card, raise, modal" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:18px;padding:8px">
++    <div class="col" style="gap:8px"><div style="width:132px;height:92px;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-inset-hairline)"></div><span class="lbl">hairline</span></div><div class="col" style="gap:8px"><div style="width:132px;height:92px;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-card)"></div><span class="lbl">card</span></div><div class="col" style="gap:8px"><div style="width:132px;height:92px;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-raise)"></div><span class="lbl">raise</span></div><div class="col" style="gap:8px"><div style="width:132px;height:92px;background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-modal)"></div><span class="lbl">modal</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/type-body.html b/guidelines/type-body.html
+new file mode 100644
+index 0000000..1b4989f
+--- /dev/null
++++ b/guidelines/type-body.html
+@@ -0,0 +1,20 @@
++<!-- @dsCard group="Type" viewport="700x200" name="Lead & body" subtitle="21px lead, 17px body, 15px small" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="col" style="gap:8px;max-width:600px">
++    <p style="font:var(--text-lead);letter-spacing:var(--tracking-normal)">A 21px lead sits directly under a headline and rarely runs past two lines.</p>
++    <p style="font:var(--text-copy);color:var(--text-secondary)">Body copy is 17px with 1.52 leading and secondary ink. Measure caps at roughly 66 characters — the container-narrow token exists for exactly this.</p>
++    <p style="font:var(--text-legal);color:var(--text-tertiary)">13px legal, tertiary ink, for footnotes and pricing terms.</p>
++  </div>
++</body></html>
+diff --git a/guidelines/type-display.html b/guidelines/type-display.html
+new file mode 100644
+index 0000000..e42b5e6
+--- /dev/null
++++ b/guidelines/type-display.html
+@@ -0,0 +1,20 @@
++<!-- @dsCard group="Type" viewport="700x210" name="Display" subtitle="96 / 72 / 56px, semibold, -0.032em" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="col" style="gap:4px">
++    <div style="font:var(--weight-semibold) 96px/1.04 var(--font-sans);letter-spacing:-0.032em">Halo.</div>
++    <div style="font:var(--weight-semibold) 56px/1.12 var(--font-sans);letter-spacing:-0.032em">Sound, staged.</div>
++    <div class="lbl">--size-display-xl 96 &nbsp;·&nbsp; --size-display-lg 72 &nbsp;·&nbsp; --size-display-md 56</div>
++  </div>
++</body></html>
+diff --git a/guidelines/type-headline.html b/guidelines/type-headline.html
+new file mode 100644
+index 0000000..a4290bb
+--- /dev/null
++++ b/guidelines/type-headline.html
+@@ -0,0 +1,20 @@
++<!-- @dsCard group="Type" viewport="700x190" name="Headline & title" subtitle="40px semibold, 28px medium" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="col" style="gap:8px">
++    <div style="font:var(--text-h2);letter-spacing:var(--tracking-tight)">Machined from a single billet.</div>
++    <div style="font:var(--text-h3);letter-spacing:var(--tracking-tight)">Every seam, considered.</div>
++    <div class="lbl">--text-h2 40/1.12 semibold &nbsp;·&nbsp; --text-h3 28/1.28 medium</div>
++  </div>
++</body></html>
+diff --git a/guidelines/type-mono.html b/guidelines/type-mono.html
+new file mode 100644
+index 0000000..ff395ed
+--- /dev/null
++++ b/guidelines/type-mono.html
+@@ -0,0 +1,21 @@
++<!-- @dsCard group="Type" viewport="700x160" name="Spec mono" subtitle="IBM Plex Mono for measurements and part numbers" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:32px">
++    <div class="col" style="gap:2px"><span style="font:var(--text-spec)">142 g</span><span class="lbl">weight</span></div>
++    <div class="col" style="gap:2px"><span style="font:var(--text-spec)">40 mm</span><span class="lbl">driver</span></div>
++    <div class="col" style="gap:2px"><span style="font:var(--text-spec)">A2XKQ-04</span><span class="lbl">part no.</span></div>
++    <div class="col" style="gap:2px"><span style="font:var(--text-spec)">USB-C · 3.5 mm</span><span class="lbl">ports</span></div>
++  </div>
++</body></html>
+diff --git a/guidelines/type-tracking.html b/guidelines/type-tracking.html
+new file mode 100644
+index 0000000..b817270
+--- /dev/null
++++ b/guidelines/type-tracking.html
+@@ -0,0 +1,20 @@
++<!-- @dsCard group="Type" viewport="700x170" name="Tracking" subtitle="Negative as size grows; wide only for eyebrows" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="col" style="gap:8px">
++    <div style="font:var(--weight-semibold) 40px/1.1 var(--font-sans);letter-spacing:-0.032em">Tighter as it grows</div>
++    <div style="font:var(--text-copy)">Normal −0.011em for body</div>
++    <div style="font:var(--weight-medium) 11px/1 var(--font-sans);letter-spacing:var(--tracking-caps);text-transform:uppercase;color:var(--text-tertiary)">Eyebrow · 0.13em</div>
++  </div>
++</body></html>
+diff --git a/guidelines/type-weights.html b/guidelines/type-weights.html
+new file mode 100644
+index 0000000..d9d549b
+--- /dev/null
++++ b/guidelines/type-weights.html
+@@ -0,0 +1,22 @@
++<!-- @dsCard group="Type" viewport="700x160" name="Weights" subtitle="300–700; display never goes below 500" -->
++<!DOCTYPE html>
++<html lang="en"><head><meta charset="utf-8">
++<link rel="stylesheet" href="../styles.css">
++<style>
++  body { padding: 22px; background: var(--surface-page); }
++  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
++  .col { display: flex; flex-direction: column; gap: 10px; }
++  .lbl { font: var(--weight-medium) var(--size-micro)/1 var(--font-mono); letter-spacing: 0.02em; color: var(--text-tertiary); }
++  .sw { width: 92px; }
++  .chip { height: 56px; border-radius: var(--radius-sm); box-shadow: var(--shadow-inset-hairline); }
++  
++</style></head>
++<body>
++<div class="row" style="gap:26px">
++    <div class="col" style="gap:2px"><span style="font:300 34px/1 var(--font-sans);letter-spacing:-0.02em">Aa</span><span class="lbl">300 light</span></div>
++    <div class="col" style="gap:2px"><span style="font:400 34px/1 var(--font-sans);letter-spacing:-0.02em">Aa</span><span class="lbl">400 regular</span></div>
++    <div class="col" style="gap:2px"><span style="font:500 34px/1 var(--font-sans);letter-spacing:-0.02em">Aa</span><span class="lbl">500 medium</span></div>
++    <div class="col" style="gap:2px"><span style="font:600 34px/1 var(--font-sans);letter-spacing:-0.02em">Aa</span><span class="lbl">600 semibold</span></div>
++    <div class="col" style="gap:2px"><span style="font:700 34px/1 var(--font-sans);letter-spacing:-0.02em">Aa</span><span class="lbl">700 bold · rare</span></div>
++  </div>
++</body></html>
+diff --git a/index.html b/index.html
+new file mode 100644
+index 0000000..d951e90
+--- /dev/null
++++ b/index.html
+@@ -0,0 +1,41 @@
++<!DOCTYP

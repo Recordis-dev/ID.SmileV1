@@ -1,0 +1,45 @@
+:root {
+  --font-sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* Display: marketing only. Light weights, negative tracking, tight leading. */
+  --size-display-xl: 96px;
+  --size-display-lg: 72px;
+  --size-display-md: 56px;
+  --size-headline:   40px;
+  --size-title:      28px;
+  --size-subtitle:   21px;
+  --size-body:       17px;
+  --size-body-sm:    15px;
+  --size-caption:    13px;
+  --size-micro:      11px;
+
+  --leading-display: 1.04;
+  --leading-tight:   1.12;
+  --leading-snug:    1.28;
+  --leading-body:    1.52;
+  --leading-loose:   1.62;
+
+  --tracking-display: -0.032em;
+  --tracking-tight:   -0.021em;
+  --tracking-normal:  -0.011em;
+  --tracking-wide:    0.06em;
+  --tracking-caps:    0.13em;
+
+  /* Semantic roles */
+  --text-hero:  var(--weight-semibold) var(--size-display-xl) / var(--leading-display) var(--font-sans);
+  --text-h1:    var(--weight-semibold) var(--size-display-md) / var(--leading-tight) var(--font-sans);
+  --text-h2:    var(--weight-semibold) var(--size-headline) / var(--leading-tight) var(--font-sans);
+  --text-h3:    var(--weight-medium) var(--size-title) / var(--leading-snug) var(--font-sans);
+  --text-lead:  var(--weight-regular) var(--size-subtitle) / var(--leading-snug) var(--font-sans);
+  --text-copy:  var(--weight-regular) var(--size-body) / var(--leading-body) var(--font-sans);
+  --text-small: var(--weight-regular) var(--size-body-sm) / var(--leading-loose) var(--font-sans);
+  --text-legal: var(--weight-regular) var(--size-caption) / var(--leading-loose) var(--font-sans);
+  --text-spec:  var(--weight-medium) var(--size-caption) / 1.4 var(--font-mono);
+}
