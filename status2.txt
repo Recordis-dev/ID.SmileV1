@@ -1,0 +1,8 @@
+A  branches2.txt
+A  debug.txt
+A  final_log.txt
+A  log2.txt
+A  manual_push.txt
+A  remote.txt
+?? status2.txt
+

@@ -1,0 +1,2 @@
+origin	https://x-access-token:@github.com/Recordis-dev/ID.SmileV1.git (fetch)
+origin	https://x-access-token:@github.com/Recordis-dev/ID.SmileV1.git (push)
