@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ID Smile — comparador de versiones</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#061520}
+  *{box-sizing:border-box}
+  a{color:#0A6FB2;text-decoration:none}
+  a:hover{color:#00BEEA}
+
+  .ids-marquee-link {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.28,0.11,0.32,1);
+    display: inline-block;
+  }
+  .ids-marquee-link:hover {
+    color: #fff !important;
+    transform: scale(1.25) !important;
+    text-shadow: 0 0 20px rgba(255,255,255,0.8) !important;
+    z-index: 10;
+    position: relative;
+  }
+
+  /* Mega Menu Styles */
+  .mega-menu-trigger {
+    position: relative;
+    cursor: pointer;
+    padding: 24px 0; /* Creates a large hover bridge */
+    margin: -24px 0; 
+  }
+  .mega-menu-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 24px); /* Drop just below header */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #061520;
+    border: 1px solid rgba(150,200,235,.20);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    padding: 24px;
+    min-width: 600px; /* Wide panel */
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .mega-menu-trigger:hover .mega-menu-panel {
+    display: flex; /* Grid/flex layout */
+    gap: 32px;
+  }
+  .mega-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .mega-category {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #6FE0F8;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(150,200,235,.1);
+  }
+  .mega-link {
+    color: #AAC2D4;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mega-link:hover {
+    background: rgba(150,200,235,.1);
+    color: #fff;
+  }
+  .mega-link-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+  .mega-link:hover .mega-link-icon {
+    opacity: 1;
+    color: #00BEEA;
+  }
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;background:#061520">
+  <iframe src="{{ src }}" title="Versión mostrada" style="position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff"></iframe>
+
+  <div style="position:fixed;top:14px;right:14px;z-index:9999;display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-family:'Inter',ui-sans-serif,system-ui,sans-serif">
+    <div style="display:flex;align-items:center;gap:6px;padding:6px;border-radius:99px;background:rgba(6,21,32,.82);backdrop-filter:blur(12px);border:1px solid rgba(150,200,235,.22);box-shadow:0 10px 30px rgba(0,0,0,.32)">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#8AA3B6;padding:0 8px 0 10px;white-space:nowrap">Versión</span>
+      <sc-for list="{{ versions }}" as="v" hint-placeholder-count="3">
+        <button type="button" onClick="{{ v.pick }}" title="{{ v.note }}" style="{{ v.style }}">{{ v.label }}</button>
+      </sc-for>
+    </div>
+    <div style="max-width:280px;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;line-height:1.5;letter-spacing:.02em;color:#8AA3B6;background:rgba(6,21,32,.72);backdrop-filter:blur(10px);border:1px solid rgba(150,200,235,.16);border-radius:10px;padding:8px 11px">{{ activeNote }}</div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    let saved = null;
+    try { saved = localStorage.getItem('idsmile-version'); } catch (e) {}
+    this.state = { key: saved || 'precise' };
+  }
+  defs() {
+    return [
+      { key: '5050', label: '50/50', file: 'IDSmileApertureRemix5050.dc.html',
+        note: 'Mezcla cálida: crema Apple + teal ID Smile, antes de la corrección de marca.' },
+      { key: 'brand', label: 'Marca', file: 'IDSmileBrandRemix.dc.html',
+        note: 'Primer pase con los azules reales del logo sobre la base Aperture.' },
+      { key: 'precise', label: 'Precisa', file: 'IDSmileBrandPrecise.dc.html',
+        note: 'Paleta muestreada del logo, curva y degradado de la sonrisa corregidos, luminosidad dinámica.' }
+    ];
+  }
+  pick(key) {
+    try { localStorage.setItem('idsmile-version', key); } catch (e) {}
+    this.setState({ key: key });
+  }
+  renderVals() {
+    const defs = this.defs();
+    const active = defs.find(d => d.key === this.state.key) || defs[2];
+    const base = 'font-family:inherit;font-size:12.5px;font-weight:600;letter-spacing:.01em;padding:7px 14px;border-radius:99px;cursor:pointer;transition:background .18s,color .18s;white-space:nowrap;';
+    return {
+      src: './' + active.file,
+      activeNote: active.note,
+      versions: defs.map(d => ({
+        label: d.label,
+        note: d.note,
+        pick: () => this.pick(d.key),
+        style: base + (d.key === active.key
+          ? 'background:#0A6FB2;color:#fff;border:1px solid #0A6FB2;'
+          : 'background:transparent;color:#AAC2D4;border:1px solid rgba(150,200,235,.20);')
+      }))
+    };
+  }
+}
+
+</script>
+
+<script>
+  // Robust Pure JS Marquee Controller - v3 (Responsive, Mobile, SEO, Scroll-Physics)
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById("ids-marquee-container");
+    const content = document.getElementById("ids-marquee-content");
+    if (!container || !content) return;
+
+    content.style.animation = 'none';
+    content.style.willChange = 'transform';
+    
+    const BASE_SPEED = 0.33; 
+    let targetSpeed = BASE_SPEED;
+    let currentSpeed = BASE_SPEED;
+    let currentX = 0;
+    let isHovering = false;
+    let scrollTimeout;
+
+    function lerp(start, end, amt) {
+      return (1 - amt) * start + amt * end;
+    }
+
+    function animate() {
+      currentSpeed = lerp(currentSpeed, targetSpeed, 0.08);
+      if (currentSpeed < 0.01) currentSpeed = 0;
+      
+      currentX -= currentSpeed;
+      
+      const scrollMax = content.scrollWidth / 2;
+      if (currentX <= -scrollMax && scrollMax > 0) {
+        currentX += scrollMax;
+      }
+      
+      content.style.transform = `translate3d(${currentX}px, 0, 0)`;
+      requestAnimationFrame(animate);
+    }
+    
+    setTimeout(() => { requestAnimationFrame(animate); }, 100);
+
+    function handleInteraction(clientX) {
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const distFromCenter = Math.abs(clientX - centerX) / (rect.width / 2);
+      
+      if (distFromCenter < 0.15) {
+        targetSpeed = 0;
+      } else {
+        targetSpeed = BASE_SPEED + Math.pow(distFromCenter, 1.8) * 5.0;
+      }
+    }
+
+    container.addEventListener("mouseenter", () => { isHovering = true; });
+    container.addEventListener("mouseleave", () => { 
+      isHovering = false;
+      targetSpeed = BASE_SPEED; 
+    });
+    container.addEventListener("mousemove", (e) => {
+      if (!isHovering) return;
+      handleInteraction(e.clientX);
+    });
+
+    container.addEventListener("touchstart", (e) => {
+      isHovering = true;
+      handleInteraction(e.touches[0].clientX);
+    }, {passive: true});
+    
+    container.addEventListener("touchmove", (e) => {
+      if (!isHovering) return;
+      handleInteraction(e.touches[0].clientX);
+    }, {passive: true});
+
+    container.addEventListener("touchend", () => {
+      isHovering = false;
+      targetSpeed = BASE_SPEED;
+    });
+
+    window.addEventListener("scroll", () => {
+      if(isHovering) return; 
+      targetSpeed = BASE_SPEED * 4.0; 
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if(!isHovering) targetSpeed = BASE_SPEED;
+      }, 150);
+    }, {passive: true});
+  });
+</script>
+</body>
+
+</html>
