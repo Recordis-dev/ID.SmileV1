@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+
+<style>
+  .nav-dropdown:hover .dropdown-content { display: block !important; }
+  .dropdown-content a:hover { background: rgba(46,154,160,0.15); }
+  .breadcrumb a { color: #2E9AA0; text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+</style>
 </head>
+
 <body>
 <x-dc>
 <helmet>
@@ -156,16 +164,44 @@
         <span style="font-family:'Inter',sans-serif;font-size:7.5px;font-weight:400;letter-spacing:.34em;color:#8AA3B6;white-space:nowrap;line-height:1;padding-left:1px">CREANDO SONRISAS</span>
       </span>
     </a>
-    <nav style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <a href="#servicios" style="font-size:14px;color:#AAC2D4;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(0,190,234,.16)">Servicios</a>
-      <a href="#ninos" style="font-size:14px;color:#AAC2D4;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(0,190,234,.16)">Niños</a>
-      <a href="#doctores" style="font-size:14px;color:#AAC2D4;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(0,190,234,.16)">Doctores</a>
-      <a href="#costos" style="font-size:14px;color:#AAC2D4;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(0,190,234,.16)">Costos</a>
-      <a href="#contacto" style="font-size:14px;color:#AAC2D4;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(0,190,234,.16)">Contacto</a>
-      <a href="{{ waUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:#0A6FB2;color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:99px;transition:background .2s,transform .2s" style-hover="background:#0C82CE;color:#fff;transform:translateY(-1px)">Agendar</a>
-    </nav>
+    
+<nav aria-label="Navegación principal" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;list-style:none;margin:0;padding:0">
+  <li style="position:relative" class="nav-dropdown">
+    <a href="index.html#servicios" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px;text-decoration:none" aria-haspopup="true" aria-expanded="false">Tratamientos ▼</a>
+    <ul class="dropdown-content" aria-label="Lista de tratamientos" style="display:none;position:absolute;top:100%;left:0;background:#14161A;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px;min-width:220px;z-index:100;box-shadow:0 10px 25px rgba(0,0,0,0.5)">
+      <li style="margin-bottom:8px"><span style="color:#2E9AA0;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:0 12px">Ortodoncia</span></li>
+      <li><a href="servicio-ortodoncia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Ortodoncia Especializada</a></li>
+      <li><a href="servicio-odontopediatria.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Odontopediatría</a></li>
+      <li style="margin:12px 0 8px"><span style="color:#2E9AA0;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:0 12px">Restauración</span></li>
+      <li><a href="servicio-implantes.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Implantes y Prótesis</a></li>
+      <li><a href="servicio-endodoncia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Endodoncia</a></li>
+      <li style="margin:12px 0 8px"><span style="color:#2E9AA0;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:0 12px">Salud Bucal</span></li>
+      <li><a href="servicio-integral.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Odontología Integral</a></li>
+      <li><a href="servicio-periodoncia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Periodoncia</a></li>
+      <li><a href="servicio-cirugia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:4px">Cirugía Bucal</a></li>
+    </ul>
+  </li>
+  <li><a href="index.html#doctores" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px;text-decoration:none">Especialistas</a></li>
+  <li><a href="blog.html" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px;text-decoration:none">Blog</a></li>
+  <li><a href="https://wa.me/5217773773106" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#2E9AA0;color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:99px;text-decoration:none">Agendar Cita</a></li>
+</nav>
+
   </div>
 </header>
+
+    <!-- SEO Breadcrumbs -->
+    <nav aria-label="Breadcrumb" class="breadcrumb" style="max-width:1140px;margin:0 auto;padding:16px 24px;font-size:13px;color:#7C838C">
+      <ol style="list-style:none;padding:0;margin:0;display:flex;gap:8px">
+        <li><a href="index.html">Inicio</a></li>
+        <li><span aria-hidden="true">/</span></li>
+        <li><a href="index.html#servicios">Tratamientos</a></li>
+        <li><span aria-hidden="true">/</span></li>
+        <li>Ortodoncia y Alineación</li>
+        <li><span aria-hidden="true">/</span></li>
+        <li aria-current="page" style="color:#121417;font-weight:500">Odontopediatria</li>
+      </ol>
+    </nav>
+    
 <main style="min-height: 80vh; background: #F5F9FC; display:flex; flex-direction:column; padding-bottom: 96px;">
   
   <div style="background:#fff; border-bottom:1px solid #D7E1EA; padding: 24px;">
@@ -197,6 +233,17 @@
     </div>
   </div>
 </main>
+
+    <!-- Related Services Cross-linking (AI SEO) -->
+    <section style="padding:60px 24px;background:#FAFBFC;border-top:1px solid #E7EAEE">
+        <div style="max-width:800px;margin:0 auto;text-align:center">
+            <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-size:24px;margin:0 0 24px">Explora otros servicios relacionados</h3>
+            <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+                <a href="servicio-ortodoncia.html" style="display:inline-block;padding:12px 24px;border:1px solid #DCDFE3;border-radius:8px;color:#121417;text-decoration:none;font-weight:500;transition:border-color 0.2s" onmouseover="this.style.borderColor='#2E9AA0'" onmouseout="this.style.borderColor='#DCDFE3'">Ortodoncia →</a><a href="servicio-integral.html" style="display:inline-block;padding:12px 24px;border:1px solid #DCDFE3;border-radius:8px;color:#121417;text-decoration:none;font-weight:500;transition:border-color 0.2s" onmouseover="this.style.borderColor='#2E9AA0'" onmouseout="this.style.borderColor='#DCDFE3'">Prevención →</a>
+            </div>
+        </div>
+    </section>
+    
 <footer style="background:#061520;color:#AAC2D4;border-top:1px solid rgba(150,200,235,.20);padding:24px 24px 96px">
   <div style="max-width:1140px;margin:0 auto;display:flex;flex-direction:column;gap:14px">
 

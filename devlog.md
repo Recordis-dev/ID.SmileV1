@@ -26,3 +26,8 @@
 *   **What happened:** Refactored Mega Menu into semantic `<nav>` with `<ul>`, `<li>` and `aria-label` attributes. Decreased Marquee base speed to `0.33` and widened the central dead-zone to `0.15`. Added `touchstart` and `touchmove` events for mobile interaction. Added a `scroll` event listener that temporarily speeds up the marquee. Re-wrote `devlog.md`.
 *   **What worked:** The dual-approach structure is now entirely responsive and semantically ready for AI crawlers.
 *   **Learnings:** Moving from `<div>`s to `<ul>/<li>` inside mega-menus is crucial for screen readers and SEO spiders to understand the hierarchy of SLPs vs Blogs.
+
+## Iteration 6: AI-SEO Architecture & Semantic Cross-Linking
+*   **What happened:** Redesigned the navigation strategy to group the 7 standalone SLPs into 3 topic clusters (Orthodontics, Restoration, Oral Health). Replaced the simple anchor navigation with a CSS-only dropdown Mega-Menu across all pages (`index.html` and `ui_kits/idsmile_remix/*.html`).
+*   **What worked:** Injected structural Breadcrumbs (`<nav aria-label="Breadcrumb">`) at the top of each SLP and a "Related Services" section at the bottom.
+*   **Learnings:** Creating a robust, cyclical architecture (Top Menu -> SLP -> Breadcrumb -> Related Service -> Next SLP) guarantees that web crawlers can deeply map the domain context without hitting "dead ends", and significantly improves the User Experience on inner pages.
