@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Specifically allow AI crawlers
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://recordis-dev.github.io/ID.SmileV1/sitemap.xml

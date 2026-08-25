@@ -1,3 +1,1 @@
-node_modules/
-.DS_Store
-.thumbnail
+node_modules/\n.DS_Store\n.thumbnail

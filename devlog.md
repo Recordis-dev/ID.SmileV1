@@ -26,3 +26,8 @@
 *   **What happened:** Refactored Mega Menu into semantic `<nav>` with `<ul>`, `<li>` and `aria-label` attributes. Decreased Marquee base speed to `0.33` and widened the central dead-zone to `0.15`. Added `touchstart` and `touchmove` events for mobile interaction. Added a `scroll` event listener that temporarily speeds up the marquee. Re-wrote `devlog.md`.
 *   **What worked:** The dual-approach structure is now entirely responsive and semantically ready for AI crawlers.
 *   **Learnings:** Moving from `<div>`s to `<ul>/<li>` inside mega-menus is crucial for screen readers and SEO spiders to understand the hierarchy of SLPs vs Blogs.
+
+## Iteration 8: Nav-Graph Correction and Legacy File Restoration
+*   **What happened:** A previous refactoring step broke the GitHub Pages root routing and the Storefront `index.html` by incorrectly moving files out of their `ui_kits` context. The user correctly identified that this "degenerated" the base functionality and killed the versions viewer. We rolled back to a stable commit (`29da74b`).
+*   **What worked:** In-situ architectural injection. Instead of moving files, we ran the Python 30-point self-healing loop (Schema, Metadata, CTAs, Sitemaps, Breadcrumbs, and HTML cleaning) *directly* on the `ui_kits/idsmile_remix/` folder. The Mega Menu links now correctly point to `IDSmileApertureRemix.dc.html#hash` rather than `index.html`.
+*   **Learnings:** Never alter the original scaffolding/directory structure of a UI Kit template output unless instructed. Deep-linking must respect the existing router boundaries (e.g. `index.html` as the directory storefront and `.dc.html` as the specific app landing).

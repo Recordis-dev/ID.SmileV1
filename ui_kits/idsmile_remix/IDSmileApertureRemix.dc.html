@@ -3,11 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+
+<style>
+  .nav-dropdown:hover .dropdown-content { display: block !important; }
+  .dropdown-content a:hover { background: rgba(46,154,160,0.15); }
+  .breadcrumb a { color: #2E9AA0; text-decoration: none; font-family:'Inter',sans-serif;font-weight:400; }
+  .breadcrumb a:hover { text-decoration: underline; }
+</style>
 </head>
+
 <body>
-<x-dc>
-<helmet>
+
+
 <meta name="description" content="Ortodoncia especializada en Cuernavaca, dentro del Hospital San Diego. Brackets metálicos y estéticos, alineadores transparentes y ortodoncia infantil desde los 7 años. Valoración con diagnóstico honesto y plan por escrito — Odont. Benjamín Avendaño (Céd. 09271434).">
 <meta name="keywords" content="ortodoncia Cuernavaca, ortodoncista Cuernavaca, brackets Cuernavaca, alineadores transparentes Cuernavaca, ortodoncia infantil Morelos, Hospital San Diego Cuernavaca">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -127,7 +134,7 @@
 {"@type":"Question","name":"¿Es seguro usar alineadores que se compran por internet sin ir al dentista?","acceptedAnswer":{"@type":"Answer","text":"Los alineadores enviados a domicilio sin revisión presencial pueden funcionar en casos ligeros y en pacientes sin problemas de encía o hueso, pero nadie verifica si el paciente es ese caso. Sin radiografía previa se corre el riesgo de mover dientes sobre un soporte periodontal comprometido y causar daño permanente. La ortodoncia es un acto médico y requiere diagnóstico, supervisión periódica y ajuste según la respuesta biológica de cada paciente."}},
 {"@type":"Question","name":"¿Dónde está el consultorio de ID Smile?","acceptedAnswer":{"@type":"Answer","text":"Dentro del Hospital San Diego, en Av. San Diego 1203, Torre Médica San Diego, Consultorio 315, Col. Delicias, Cuernavaca, Morelos. Hay estacionamiento en el hospital y acceso para silla de ruedas."}}]}]}
 </script>
-</helmet>
+
 
 <div style="background:#FAFBFC">
 
@@ -137,14 +144,28 @@
       <span style="width:34px;height:34px;border-radius:50%;background:#0E5C63;position:relative;flex:none;display:block" style-before="content:'';position:absolute;inset:7px;border-radius:50%;border:1.5px solid #2E9AA0" style-after="content:'';position:absolute;inset:12px;border-radius:50%;border:1.5px solid #fff"></span>
       <b style="font-family:'Bricolage Grotesque','Inter',sans-serif;font-size:19px;font-weight:600;letter-spacing:-.02em;color:#fff;white-space:nowrap">ID Smile</b>
     </a>
-    <nav style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-      <a href="#servicios" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(46,154,160,.14)">Servicios</a>
-      <a href="#ninos" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(46,154,160,.14)">Niños</a>
-      <a href="#doctores" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(46,154,160,.14)">Doctores</a>
-      <a href="#costos" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(46,154,160,.14)">Costos</a>
-      <a href="#contacto" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px" style-hover="color:#fff;background:rgba(46,154,160,.14)">Contacto</a>
-      <a href="{{ waUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:#2E9AA0;color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:99px;transition:background .2s,transform .2s" style-hover="background:#37B4BA;color:#fff;transform:translateY(-1px)">Agendar</a>
-    </nav>
+    
+<nav aria-label="Navegación principal" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;list-style:none;margin:0;padding:0">
+  <li style="position:relative" class="nav-dropdown">
+    <a href="IDSmileApertureRemix.dc.html#servicios" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px;text-decoration:none" aria-haspopup="true" aria-expanded="false">Tratamientos ▼</a>
+    <ul class="dropdown-content" aria-label="Lista de tratamientos" style="display:none;position:absolute;top:100%;left:0;background:rgba(20, 22, 26, 0.95);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;min-width:260px;z-index:100;box-shadow:0 10px 25px rgba(0,0,0,0.5)">
+      <li style="margin-bottom:8px"><span style="color:#2E9AA0;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:0 12px">Ortodoncia y Alineación</span></li>
+      <li><a href="servicio-ortodoncia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Ortodoncia Especializada</a></li>
+      <li><a href="servicio-odontopediatria.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Odontopediatría</a></li>
+      <li style="margin:12px 0 8px"><span style="color:#2E9AA0;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:0 12px">Restauración y Prótesis</span></li>
+      <li><a href="servicio-implantes.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Implantes Dentales</a></li>
+      <li><a href="servicio-endodoncia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Endodoncia (Salva tu diente)</a></li>
+      <li style="margin:12px 0 8px"><span style="color:#2E9AA0;font-size:11px;text-transform:uppercase;letter-spacing:1px;padding:0 12px">Salud Bucal y Cirugía</span></li>
+      <li><a href="servicio-integral.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Odontología Integral</a></li>
+      <li><a href="servicio-periodoncia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Periodoncia (Encías)</a></li>
+      <li><a href="servicio-cirugia.html" style="display:block;padding:8px 12px;color:#fff;text-decoration:none;font-size:14px;border-radius:6px;transition:background 0.2s">Cirugía Bucal (Muelas del juicio)</a></li>
+    </ul>
+  </li>
+  <li><a href="IDSmileApertureRemix.dc.html#doctores" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px;text-decoration:none">Especialistas</a></li>
+  <li><a href="blog.html" style="font-size:14px;color:#A8AEB6;padding:8px 12px;border-radius:99px;text-decoration:none">Blog & Recursos</a></li>
+  <li><a href="https://wa.me/5217773773106" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#2E9AA0;color:#fff;font-weight:700;font-size:14px;padding:11px 18px;border-radius:99px;text-decoration:none">Agendar Valoración</a></li>
+</nav>
+
   </div>
 </header>
 
@@ -591,7 +612,7 @@
 
 </div>
 
-</x-dc>
+
 <script type="text/x-dc" data-dc-script data-props="{&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5217773773106&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;waMessage&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Hola, me gustaría agendar una valoración de ortodoncia en ID Smile.&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;showPrices&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenido&quot;}}">
 class Component extends DCLogic {
   componentDidMount() {
