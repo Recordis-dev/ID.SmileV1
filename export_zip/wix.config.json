@@ -1,0 +1,8 @@
+{
+  "siteId": "",
+  "siteTitle": "ID Smile Export",
+  "frontend": {
+    "type": "static",
+    "publishDir": "./"
+  }
+}
