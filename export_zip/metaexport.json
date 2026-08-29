@@ -88,5 +88,101 @@
       }
     ],
     "products": []
+  },
+  "architecture": {
+    "site_design": {
+      "global_styles": {
+        "typography": {
+          "fonts": [
+            "Bricolage Grotesque",
+            "Inter",
+            "IBM Plex Mono"
+          ],
+          "styles": {
+            "h1": {
+              "font-family": "Bricolage Grotesque",
+              "weight": 600
+            },
+            "p": {
+              "font-family": "Inter",
+              "weight": 400
+            }
+          }
+        },
+        "color_palette": {
+          "themes": [
+            "Aperture",
+            "ID Smile",
+            "Precise"
+          ],
+          "variables": {
+            "primary": "#2563EB",
+            "background": "#FAFBFC",
+            "text": "#1F2937"
+          }
+        }
+      }
+    },
+    "components": {
+      "global": [
+        {
+          "id": "comp-header",
+          "name": "Global Header",
+          "type": "Header"
+        },
+        {
+          "id": "comp-footer",
+          "name": "Global Footer",
+          "type": "Footer"
+        }
+      ],
+      "reusable_blocks": [
+        {
+          "id": "block-hero",
+          "name": "Hero Section",
+          "type": "Section"
+        },
+        {
+          "id": "block-services-grid",
+          "name": "Services Grid",
+          "type": "Section"
+        }
+      ]
+    },
+    "pages": {
+      "static": [
+        {
+          "id": "page-home",
+          "name": "Home",
+          "slug": "/",
+          "file": "index.html"
+        },
+        {
+          "id": "page-blog",
+          "name": "Blog",
+          "slug": "/blog",
+          "file": "blog.html"
+        }
+      ],
+      "cms_collections": [
+        {
+          "id": "col-services",
+          "name": "Services Catalog",
+          "templates": [
+            "servicio-cirugia.html",
+            "servicio-ortodoncia.html",
+            "servicio-implantes.html",
+            "servicio-endodoncia.html",
+            "servicio-periodoncia.html",
+            "servicio-odontopediatria.html",
+            "servicio-integral.html"
+          ]
+        }
+      ]
+    },
+    "seo_global": {
+      "schema_org": "JSON-LD (Dentist, MedicalClinic, FAQPage)",
+      "language": "es_MX"
+    }
   }
 }
