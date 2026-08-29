@@ -1,0 +1,359 @@
+
+/* Token: base.css */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  font: var(--text-copy);
+  letter-spacing: var(--tracking-normal);
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+a:hover { color: var(--accent-hover); text-decoration: underline; text-underline-offset: 3px; }
+a:active { color: var(--accent-press); }
+
+h1, h2, h3, h4, p, figure { margin: 0; }
+
+::selection { background: var(--accent-soft); color: var(--ink-900); }
+
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
+
+img, video { display: block; max-width: 100%; }
+
+/* Token: colors.css */
+:root {
+  /* ---- Light scale: monochrome luxury. Value, not hue, carries the hierarchy. ---- */
+  --white: #FFFFFF;
+  --snow:  #FAFBFC;
+  --mist:  #F2F4F6;
+  --fog:   #E7EAEE;
+  --line:  #DCDFE3;
+
+  --ink-400: #9AA1A9;
+  --ink-500: #7C838C;
+  --ink-600: #5A6169;
+  --ink-700: #3C4248;
+  --ink-800: #22262B;
+  --ink-900: #121417;
+
+  /* ---- Dark stage: for cinematic product sections ---- */
+  --void:     #08090B;
+  --graphite: #14161A;
+  --slate:    #1E2126;
+
+  /* ---- Single accent. Used for links, CTAs and nothing decorative. ---- */
+  --accent:       #0A66FF;
+  --accent-hover: #2A7BFF;
+  --accent-press: #0752CC;
+  --accent-soft:  #EAF1FF;
+
+  /* ---- Semantic status. Rare; never used as decoration. ---- */
+  --positive: #0E8A4F;
+  --caution:  #B5670A;
+  --critical: #D0342C;
+  --positive-soft: #E8F5EE;
+  --caution-soft:  #FBF1E4;
+  --critical-soft: #FBEBEA;
+
+  /* ---- Semantic aliases: reach for these in product code ---- */
+  --surface-page:         var(--white);
+  --surface-subtle:       var(--mist);
+  --surface-card:         var(--white);
+  --surface-inverse:      var(--void);
+  --surface-inverse-card: var(--graphite);
+  --surface-scrim:        rgba(8, 9, 11, 0.56);
+
+  --text-primary:   var(--ink-900);
+  --text-secondary: var(--ink-600);
+  --text-tertiary:  var(--ink-500);
+  --text-inverse:   var(--white);
+  --text-inverse-secondary: #A8AEB6;
+  --text-link:      var(--accent);
+
+  --border-hairline: var(--line);
+  --border-strong:   var(--ink-400);
+  --border-inverse:  rgba(255, 255, 255, 0.14);
+
+  --focus-ring: var(--accent);
+}
+
+[data-theme="dark"] {
+  --surface-page:   var(--void);
+  --surface-subtle: var(--graphite);
+  --surface-card:   var(--graphite);
+  --text-primary:   var(--white);
+  --text-secondary: #A8AEB6;
+  --text-tertiary:  var(--ink-500);
+  --border-hairline: rgba(255, 255, 255, 0.14);
+  --border-strong:   rgba(255, 255, 255, 0.28);
+}
+
+/* Token: effects.css */
+:root {
+  --radius-0:    0px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-xl:   28px;
+  --radius-2xl:  42px;
+  --radius-pill: 980px;
+
+  --hairline: 1px solid var(--border-hairline);
+
+  /* Shadows are almost absent. Elevation comes from value contrast and space. */
+  --shadow-none:  none;
+  --shadow-card:  0 1px 2px rgba(18, 20, 23, 0.04), 0 8px 24px rgba(18, 20, 23, 0.05);
+  --shadow-raise: 0 2px 4px rgba(18, 20, 23, 0.05), 0 18px 44px rgba(18, 20, 23, 0.09);
+  --shadow-modal: 0 32px 90px rgba(8, 9, 11, 0.28);
+  --shadow-inset-hairline: inset 0 0 0 1px var(--border-hairline);
+
+  --blur-chrome: saturate(180%) blur(20px);
+  --scrim-chrome: rgba(250, 251, 252, 0.72);
+  --scrim-chrome-inverse: rgba(8, 9, 11, 0.72);
+
+  /* Motion: long, decelerating, never bouncy. */
+  --dur-instant: 120ms;
+  --dur-fast:    200ms;
+  --dur-base:    320ms;
+  --dur-slow:    560ms;
+  --dur-cinema:  900ms;
+  --ease-out:      cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-in-out:   cubic-bezier(0.52, 0.16, 0.24, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --z-base: 0;
+  --z-chrome: 100;
+  --z-overlay: 400;
+  --z-toast: 600;
+}
+
+/* Token: fonts.css */
+/* Aperture webfonts.
+   SUBSTITUTION: the source style calls for a neutral optical-sized grotesque (SF Pro class).
+   SF Pro is not redistributable, so Inter stands in for UI + display and IBM Plex Mono for specs.
+   Replace this @import with local @font-face rules if you license your own grotesque. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+/* Token: remix.css */
+/* ID Smile × Aperture — brand-corrected remix layer.
+   Palette taken from the real ID Smile logo and social set: cyan-to-blue gradient
+   mark, white grounds, dark navy for contrast. Structure stays Aperture:
+   hairlines, spacing rhythm, Inter body/UI, IBM Plex Mono specs.
+   Load AFTER tokens/colors.css. */
+
+:root {
+  --accent:       #00A8E8;  /* logo cyan — accents, rings, dots, graphics */
+  --accent-hover: #29C0F5;
+  --accent-press: #0B6FB8;  /* deep blue — solid CTA fills, links, kickers (AA on white) */
+  --accent-soft:  #E4F3FC;
+  --accent-deep:  #08161F;  /* brand navy stage */
+
+  --surface-page:    #F6F9FB;
+  --surface-raised:  #EDF3F8;
+  --surface-sunken:  #E2EAF1;
+  --hairline:        #D7E1EA;
+
+  --text-primary:   #101820;
+  --text-secondary: #5C6A78;
+  --text-tertiary-on-dark: #8AA3B6;
+
+  --font-display: 'Bricolage Grotesque', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --weight-display: 700;
+
+  --text-link: var(--accent-press);
+}
+
+[data-theme="dark"] { --text-link: var(--accent-hover); }
+
+/* Rule: cyan never carries white text (2.5:1). Solid buttons use --accent-press. */
+
+/* Token: spacing.css */
+:root {
+  --space-0:  0px;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  22px;  /* gutter unit, not 24 */
+  --space-6:  32px;
+  --space-7:  44px;
+  --space-8:  60px;
+  --space-9:  80px;
+  --space-10: 110px;
+  --space-11: 148px;
+  --space-12: 200px;
+
+  /* Section rhythm: marketing sections breathe far wider than app padding. */
+  --section-y-sm: var(--space-9);
+  --section-y:    var(--space-11);
+  --section-y-lg: var(--space-12);
+
+  --gutter: 22px;
+  --container-narrow: 692px;
+  --container:        1024px;
+  --container-wide:   1280px;
+  --container-full:   1440px;
+
+  --control-h-sm: 32px;
+  --control-h:    44px;
+  --control-h-lg: 54px;
+}
+
+/* Token: typography.css */
+:root {
+  --font-sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* Display: marketing only. Light weights, negative tracking, tight leading. */
+  --size-display-xl: 96px;
+  --size-display-lg: 72px;
+  --size-display-md: 56px;
+  --size-headline:   40px;
+  --size-title:      28px;
+  --size-subtitle:   21px;
+  --size-body:       17px;
+  --size-body-sm:    15px;
+  --size-caption:    13px;
+  --size-micro:      11px;
+
+  --leading-display: 1.04;
+  --leading-tight:   1.12;
+  --leading-snug:    1.28;
+  --leading-body:    1.52;
+  --leading-loose:   1.62;
+
+  --tracking-display: -0.032em;
+  --tracking-tight:   -0.021em;
+  --tracking-normal:  -0.011em;
+  --tracking-wide:    0.06em;
+  --tracking-caps:    0.13em;
+
+  /* Semantic roles */
+  --text-hero:  var(--weight-semibold) var(--size-display-xl) / var(--leading-display) var(--font-sans);
+  --text-h1:    var(--weight-semibold) var(--size-display-md) / var(--leading-tight) var(--font-sans);
+  --text-h2:    var(--weight-semibold) var(--size-headline) / var(--leading-tight) var(--font-sans);
+  --text-h3:    var(--weight-medium) var(--size-title) / var(--leading-snug) var(--font-sans);
+  --text-lead:  var(--weight-regular) var(--size-subtitle) / var(--leading-snug) var(--font-sans);
+  --text-copy:  var(--weight-regular) var(--size-body) / var(--leading-body) var(--font-sans);
+  --text-small: var(--weight-regular) var(--size-body-sm) / var(--leading-loose) var(--font-sans);
+  --text-legal: var(--weight-regular) var(--size-caption) / var(--leading-loose) var(--font-sans);
+  --text-spec:  var(--weight-medium) var(--size-caption) / 1.4 var(--font-mono);
+}
+
+
+/* Main Styles */
+
+  .nav-dropdown:hover .dropdown-content { display: block !important; }
+  .dropdown-content a:hover { background: rgba(46,154,160,0.15); }
+  .breadcrumb a { color: #2E9AA0; text-decoration: none; font-family:'Inter',sans-serif;font-weight:400; }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+
+  body{margin:0;background:#FAFBFC;color:#121417;font-family:'Inter',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  a{color:#0E5C63;text-decoration:none}
+  a:hover{color:#2E9AA0}
+  summary::-webkit-details-marker{display:none}
+  ::selection{background:#D2506B;color:#fff}
+  @keyframes idsTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes idsPulse{0%,100%{opacity:.25;transform:scale(1)}50%{opacity:.6;transform:scale(1.06)}}
+  @keyframes idsDraw{from{stroke-dashoffset:1200}to{stroke-dashoffset:0}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+  .ids-marquee-link {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.28,0.11,0.32,1);
+    display: inline-block;
+  }
+  .ids-marquee-link:hover {
+    color: #fff !important;
+    transform: scale(1.25) !important;
+    text-shadow: 0 0 20px rgba(255,255,255,0.8) !important;
+    z-index: 10;
+    position: relative;
+  }
+
+  /* Mega Menu Styles */
+  .mega-menu-trigger {
+    position: relative;
+    cursor: pointer;
+    padding: 24px 0; /* Creates a large hover bridge */
+    margin: -24px 0;
+  }
+  .mega-menu-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 24px); /* Drop just below header */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #061520;
+    border: 1px solid rgba(150,200,235,.20);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    padding: 24px;
+    min-width: 600px; /* Wide panel */
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .mega-menu-trigger:hover .mega-menu-panel {
+    display: flex; /* Grid/flex layout */
+    gap: 32px;
+  }
+  .mega-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .mega-category {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #6FE0F8;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(150,200,235,.1);
+  }
+  .mega-link {
+    color: #AAC2D4;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .mega-link:hover {
+    background: rgba(150,200,235,.1);
+    color: #fff;
+  }
+  .mega-link-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+  .mega-link:hover .mega-link-icon {
+    opacity: 1;
+    color: #00BEEA;
+  }
