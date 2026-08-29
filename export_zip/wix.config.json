@@ -1,0 +1,14 @@
+{
+  "siteId": "headless-export",
+  "siteTitle": "ID Smile - Headless Architecture",
+  "frontend": {
+    "type": "static",
+    "publishDir": "./"
+  },
+  "headless": {
+    "framework": "agnostic",
+    "metaexport": "./metaexport.json",
+    "routing": "static",
+    "renderMode": "SSG"
+  }
+}

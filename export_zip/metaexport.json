@@ -1,0 +1,188 @@
+{
+  "version": "1.0",
+  "entities": {
+    "services": [
+      {
+        "id": "srv-ortodoncia",
+        "name": "Ortodoncia (Brackets y Alineadores)",
+        "description": "Tratamientos de ortodoncia especializada incluyendo brackets metálicos, estéticos y alineadores invisibles.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 45,
+        "url": "/servicio-ortodoncia"
+      },
+      {
+        "id": "srv-cirugia",
+        "name": "Cirugía Maxilofacial y Muelas del Juicio",
+        "description": "Extracciones complejas y cirugía oral.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 60,
+        "url": "/servicio-cirugia"
+      },
+      {
+        "id": "srv-implantes",
+        "name": "Implantes Dentales",
+        "description": "Recupera la función y estética de tu sonrisa con implantes dentales.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 60,
+        "url": "/servicio-implantes"
+      },
+      {
+        "id": "srv-endodoncia",
+        "name": "Endodoncia",
+        "description": "Tratamiento de conductos para salvar dientes dañados o infectados.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 60,
+        "url": "/servicio-endodoncia"
+      },
+      {
+        "id": "srv-periodoncia",
+        "name": "Periodoncia",
+        "description": "Tratamiento de las enfermedades de las encías y tejidos de soporte.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 45,
+        "url": "/servicio-periodoncia"
+      },
+      {
+        "id": "srv-odontopediatria",
+        "name": "Odontopediatría",
+        "description": "Atención dental especializada para bebés, niños y adolescentes.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 45,
+        "url": "/servicio-odontopediatria"
+      },
+      {
+        "id": "srv-integral",
+        "name": "Odontología Integral y Limpiezas",
+        "description": "Prevención, diagnóstico y tratamiento de problemas dentales comunes.",
+        "price": {
+          "currency": "MXN",
+          "amount": "0"
+        },
+        "category": "Service",
+        "duration": 45,
+        "url": "/servicio-integral"
+      }
+    ],
+    "products": []
+  },
+  "architecture": {
+    "site_design": {
+      "global_styles": {
+        "typography": {
+          "fonts": [
+            "Bricolage Grotesque",
+            "Inter",
+            "IBM Plex Mono"
+          ],
+          "styles": {
+            "h1": {
+              "font-family": "Bricolage Grotesque",
+              "weight": 600
+            },
+            "p": {
+              "font-family": "Inter",
+              "weight": 400
+            }
+          }
+        },
+        "color_palette": {
+          "themes": [
+            "Aperture",
+            "ID Smile",
+            "Precise"
+          ],
+          "variables": {
+            "primary": "#2563EB",
+            "background": "#FAFBFC",
+            "text": "#1F2937"
+          }
+        }
+      }
+    },
+    "components": {
+      "global": [
+        {
+          "id": "comp-header",
+          "name": "Global Header",
+          "type": "Header"
+        },
+        {
+          "id": "comp-footer",
+          "name": "Global Footer",
+          "type": "Footer"
+        }
+      ],
+      "reusable_blocks": [
+        {
+          "id": "block-hero",
+          "name": "Hero Section",
+          "type": "Section"
+        },
+        {
+          "id": "block-services-grid",
+          "name": "Services Grid",
+          "type": "Section"
+        }
+      ]
+    },
+    "pages": {
+      "static": [
+        {
+          "id": "page-home",
+          "name": "Home",
+          "slug": "/",
+          "file": "index.html"
+        },
+        {
+          "id": "page-blog",
+          "name": "Blog",
+          "slug": "/blog",
+          "file": "blog.html"
+        }
+      ],
+      "cms_collections": [
+        {
+          "id": "col-services",
+          "name": "Services Catalog",
+          "templates": [
+            "servicio-cirugia.html",
+            "servicio-ortodoncia.html",
+            "servicio-implantes.html",
+            "servicio-endodoncia.html",
+            "servicio-periodoncia.html",
+            "servicio-odontopediatria.html",
+            "servicio-integral.html"
+          ]
+        }
+      ]
+    },
+    "seo_global": {
+      "schema_org": "JSON-LD (Dentist, MedicalClinic, FAQPage)",
+      "language": "es_MX"
+    }
+  }
+}
